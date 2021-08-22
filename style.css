@@ -1,0 +1,76 @@
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Press Start 2P';
+  font-size: 16px;
+  line-height: 0;
+  -moz-user-select: none; 
+  -webkit-user-select: none; 
+  -ms-user-select: none; 
+  user-select: none;
+  -o-user-select: none;
+}
+.debug {
+  -moz-user-select: text; 
+  -webkit-user-select: text; 
+  -ms-user-select: text; 
+  user-select: text;
+  -o-user-select: text;
+}
+input[type=range] {
+    -webkit-appearance: none;
+    background: #000000;
+	outline: none;
+    width: 120px;
+    height: 20px;
+    opacity: 2;
+	border: 2px solid #ffffff;
+   }
+input[type=range]:hover {
+    opacity: 2;
+    background: #454545;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    cursor: pointer;
+    background: #FFFFFF  ;
+    width: 12px;
+    height: 20px;
+	border: 2px solid #000000;
+}
+button {
+  font-family: 'Press Start 2P';font-size: 16px;
+  color: #FFFFFF !important;
+  font-size: 16px;
+  padding: 2px 2px;
+  border: 2px solid #ffffff;
+  background: #000000;
+  outline: none;
+}
+button:hover {
+  background: #454545 !important;
+  background: solid;
+}
+input[type=file]::before {
+  display: inline-block;
+  content: 'LOAD LEVEL';
+  font-family: 'Press Start 2P';font-size: 16px;
+  color: #FFFFFF !important;
+  font-size: 16px;
+  padding: 2px 2px;
+  border: 2px solid #ffffff;
+  background: #000000;
+  outline: none;
+  white-space: nowrap;
+}
+input[type=file]:hover::before {
+  background: #454545 !important;
+  background: solid;
+}
+input[type=file]::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.settings {
+  display: none;
+  overflow: hidden;
+}

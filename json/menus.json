@@ -1,0 +1,226 @@
+{
+	"main_menu": {
+		"type": "floating",
+		"width": 120,
+		"height": 72,
+		"padding": 0,
+		"pauses": false,
+		"text": [
+			["1 PLAYER GAME", 16, 0, 1],
+			["LEVEL EDITOR", 16, 16, 1],
+			["SETTINGS", 16, 32, 0.5]
+		],
+		"text_shadowed": [
+			["DISCORD", 16, 48]
+		],
+		"options": [
+			[0, 0, "layer", "game"],
+			[0, 16, "layer", "edit"],
+			[0, 32, "disabled"],
+			[0, 48, "url", "https://discord.gg/m5YuTSrWWP"]
+		],
+		"click_options": []
+	},
+	"locked_main_menu": {
+		"type": "floating",
+		"width": 120,
+		"height": 72,
+		"padding": 0,
+		"pauses": false,
+		"text": [
+			["1 PLAYER GAME", 16, 0, 1],
+			["LEVEL EDITOR", 16, 16, 0.5],
+			["SETTINGS", 16, 32, 0.5]
+		],
+		"text_shadowed": [
+			["DISCORD", 16, 48]
+		],
+		"options": [
+			[0, 0, "layer", "game"],
+			[0, 16, "disabled"],
+			[0, 32, "disabled"],
+			[0, 48, "url", "https://discord.gg/m5YuTSrWWP"]
+		],
+		"click_options": []
+	},
+	"pause": {
+		"type": "overlay_border",
+		"width": 128,
+		"height": 56,
+		"padding": 8,
+		"pauses": true,
+		"esc_close": true,
+		"text": [
+			["BACK TO GAME", 16, 0, 1],
+			["RESTART LEVEL", 16, 16, 1],
+			["LEVEL EDITOR", 16, 32, 1],
+			["QUIT TO MENU", 16, 48, 1]
+		],
+		"text_shadowed": [
+			["PAUSED", 40, -24]
+		],
+		"options": [
+			[0, 0, "close"],
+			[0, 16, "layer", "game"],
+			[0, 32, "layer", "edit"],
+			[0, 48, "layer", "menu"]
+		],
+		"click_options": []
+	},
+	"locked_pause": {
+		"type": "overlay_border",
+		"width": 128,
+		"height": 56,
+		"padding": 8,
+		"pauses": true,
+		"esc_close": true,
+		"text": [
+			["BACK TO GAME", 16, 0, 1],
+			["RESTART LEVEL", 16, 16, 1],
+			["LEVEL EDITOR", 16, 32, 0.5],
+			["QUIT TO MENU", 16, 48, 1]
+		],
+		"text_shadowed": [
+			["PAUSED", 40, -24]
+		],
+		"options": [
+			[0, 0, "close"],
+			[0, 16, "layer", "game"],
+			[0, 32, "disabled"],
+			[0, 48, "layer", "menu"]
+		],
+		"click_options": []
+	},
+	"dialouge_export": {
+		"type": "overlay_border",
+		"width": 128,
+		"height": 56,
+		"padding": 8,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["EXPORTED!", 0, 0, 1],
+			["LEVEL HAS BEEN", 0, 16, 1],
+			["EXPORTED TO A", 0, 24, 1],
+			["STANDALONE URL", 0, 32, 1]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 0, "disabled"]
+		],
+		"click_options": [
+			["button", ["CLOSE", 48, 12], 0, 44, "close"]
+		]
+	},
+	"dialouge_save": {
+		"type": "overlay_border",
+		"width": 128,
+		"height": 56,
+		"padding": 8,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["SAVED!", 0, 0, 1],
+			["LEVEL HAS BEEN", 0, 16, 1],
+			["DOWNLOADED AS A", 0, 24, 1],
+			[".LVL2 FILE", 0, 32, 1]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 0, "disabled"]
+		],
+		"click_options": [
+			["button", ["CLOSE", 48, 12], 0, 44, "close"]
+		]
+	},
+	"dialouge_file": {
+		"type": "overlay_border",
+		"width": 56,
+		"height": 60,
+		"padding": 8,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["FILE", 0, 0, 1]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 0, "disabled"]
+		],
+		"click_options": [
+			["button", ["NEW", 28, 12], 0, 12, "function", "newLevel", []],
+			["button", ["OPEN", 36, 12], 0, 24, "function", "openLevel", []],
+			["button", ["SAVE", 36, 12], 0, 36, "function", "saveLevel", []],
+			["button", ["EXPORT", 52, 12], 0, 48, "function", "exportLevel", []]
+		]
+	},
+	"edit_menu": {
+		"type": "popup",
+		"width": 240,
+		"height": 224,
+		"padding": 4,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["BUILD MODES", 0, 0, 1]
+		],
+		"img": [
+			["img_tileset", 0, 0, 16, 16, 0, 12],
+			["img_sprites", 0, 0, 16, 16, 20, 12]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 0, "disabled"]
+		],
+		"click_options": [
+			["button", ["TEST", 36, 12], 0, 212, "layer", "game_test"],
+			["button", ["FILE", 36, 12], 40, 212, "menu", 96, 94, "dialouge_file", false],
+			["button", ["QUIT", 36, 12], 204, 212, "layer", "menu"],
+			["button", ["s", 14, 14], 226, 0, "menu", 16, 16, "level_options", true],
+			["button", [" ", 16, 16, true], 0, 12, "variable", ["buildMode"], 0],
+			["button", [" ", 16, 16, true], 20, 12, "variable", ["buildMode"], 1],
+			["button", [" ", 240, 176, true], 0, 32, "function", "selectTile", []]
+		]
+	},
+	"level_options": {
+		"type": "overlay_border",
+		"width": 224,
+		"height": 208,
+		"padding": 4,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["LEVEL SETTINGS", 0, 0],
+			["PRESS ESC TO EXIT", 0, 200],
+			["CAMERA:", 16, 16],
+			["ENEMY HIGH JUMP:", 16, 24],
+			["WIDTH:", 16, 32],
+			["HEIGHT:", 16, 40]
+		],
+		"variable": [
+			[["level", "settings", "camera"], 80, 16, false],
+			[["level", "settings", "enemy_high_jump"], 152, 24, false],
+			[["level", "settings", "width"], 72, 32, false],
+			[["level", "settings", "height"], 80, 40, false]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 16, "disabled"],
+			[0, 24, "function", "settings_toggle", ["enemy_high_jump", 0]],
+			[0, 32, "disabled"],
+			[0, 40, "disabled"]
+		],
+		"left_action": [
+			["function", "settings_sub", ["camera", 0]],
+			["disabled"],
+			["function", "settings_sub", ["width", 0]],
+			["function", "settings_sub", ["height", 0]]
+		],
+		"right_action": [
+			["function", "settings_add", ["camera", 2]],
+			["disabled"],
+			["function", "settings_add", ["width"]],
+			["function", "settings_add", ["height"]]
+		]
+	}
+}

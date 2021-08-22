@@ -1,0 +1,44 @@
+{
+	"inherit": {
+		"speed": 0.5,
+		"kills": true,
+		"canStomp": true,
+		"gravity": 0.5,
+		"animation": [
+			{
+				"frameX": 0,
+				"frameY": 0
+			},
+			{
+				"frameX": 16,
+				"frameY": 0
+			}
+		],
+		"animationWidth": 16,
+		"animationHeight": 16,
+		"animationFPS": 6,
+		"deathAnimation": true,
+		"deathFrame": {
+			"frameX": 32,
+			"frameY": 0
+		},
+		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
+		"tilecollision": true,
+		"enemycollision": true
+	},
+	"goomba": {
+	},
+	"bullet_bill": {
+		"speed": 2,
+		"gravity": 0,
+		"deathAnimation": false,
+		"animation": [
+			{
+				"frameX": 48,
+				"frameY": 0
+			}
+		],
+		"tilecollision": false,
+		"enemycollision": false
+	}
+}
