@@ -375,7 +375,7 @@ function startGame(menu_stack=[]) {
 	lastLoop = Date.now()
 	if(window.location.hash) {
 		hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-		level = JSON.parse(atob(hash))
+		level = JSON.parse(atob(hash)); //Parses the hash as a .lvl2 file and loads the level
 	}
 	level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 	Mario = new Mario_Class(level.marioX,level.marioY)
