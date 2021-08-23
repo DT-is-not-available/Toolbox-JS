@@ -272,15 +272,15 @@ class GameLayer_Class {
 						16
 					)
 				}
-				if (buildMode == 1) for (let i = 1; i < Object.keys(enemy_defs).length; i++) {
-					if (typeof(enemy_defs[Object.keys(enemy_defs)[i]]) != 'undefined' && typeof(enemy_defs[Object.keys(enemy_defs)[i]].animation) != 'undefined') {
+				if (buildMode == 1) for (let i = 0; i < edit_menu.enemies.length; i++) {
+					if (typeof(enemy_defs[edit_menu.enemies[i]]) != 'undefined' && typeof(enemy_defs[edit_menu.enemies[i]].animation) != 'undefined') {
 						canvas.drawImage(
 							img_sprites, 
-							enemy_defs[Object.keys(enemy_defs)[i]].animation[0].frameX,
-							enemy_defs[Object.keys(enemy_defs)[i]].animation[0].frameY,
+							enemy_defs[edit_menu.enemies[i]].animation[0].frameX,
+							enemy_defs[edit_menu.enemies[i]].animation[0].frameY,
 							16,
 							16,
-							8+mod(i-1,16)*16,
+							8+mod(i,16)*16,
 							40+Math.trunc(i/16)*16,
 							16,
 							16
@@ -292,7 +292,7 @@ class GameLayer_Class {
 							0,
 							16,
 							16,
-							8+mod(i-1,16)*16,
+							8+mod(i,16)*16,
 							40+Math.trunc(i/16)*16,
 							16,
 							16
@@ -449,7 +449,7 @@ function saveLevel(params) {
 }
 function exportLevel(params) {
 	quitMenu()
-	window.open('https://gdengine.github.io/MarioClone/js/#'+btoa(JSON.stringify(level)))
+	window.open('https://gdengine.github.io/Toolbox-JS/#'+btoa(JSON.stringify(level)))
 	addMenu(64, 92, "dialouge_export", false)
 }
 function newLevel(params) {
