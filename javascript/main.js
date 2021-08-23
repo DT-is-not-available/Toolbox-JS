@@ -394,6 +394,7 @@ function startGame(menu_stack=[]) {
 	hit_block = new Block_class(0, 0, 0, -999)
 	world_timer = level.settings.timer
 	tileBrush = 0;
+	enemyBrush = "goomba";
 	menuOption = 0;
 	title_yv = 2;
 	title_y = 0;
@@ -468,6 +469,10 @@ function openLevel(params) {
 function selectTile(params) {
 	if (buildMode == 0 && tile_defs[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]) {
 		tileBrush = Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16
+		quitMenu();
+	}
+	if (buildMode == 1 && edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]) {
+		enemyBrush = edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]
 		quitMenu();
 	}
 }

@@ -200,7 +200,7 @@
 			["HEIGHT:", 16, 40]
 		],
 		"variable": [
-			[["level", "settings", "camera"], 80, 16, false],
+			[["level", "settings", "camera"], 80, 16, true, ["CLASSIC", "CLASSIC 2-WAY", "SMB3", "NONE"]],
 			[["level", "settings", "enemy_high_jump"], 152, 24, false],
 			[["level", "settings", "width"], 72, 32, false],
 			[["level", "settings", "height"], 80, 40, false]
@@ -219,7 +219,7 @@
 			["function", "settings_sub", ["height", 0]]
 		],
 		"right_action": [
-			["function", "settings_add", ["camera", 2]],
+			["function", "settings_add", ["camera", 3]],
 			["disabled"],
 			["function", "settings_add", ["width"]],
 			["function", "settings_add", ["height"]]
