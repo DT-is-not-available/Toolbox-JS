@@ -272,6 +272,33 @@ class GameLayer_Class {
 						16
 					)
 				}
+				if (buildMode == 1) for (let i = 1; i < Object.keys(enemy_defs).length; i++) {
+					if (typeof(enemy_defs[Object.keys(enemy_defs)[i]]) != 'undefined' && typeof(enemy_defs[Object.keys(enemy_defs)[i]].animation) != 'undefined') {
+						canvas.drawImage(
+							img_sprites, 
+							enemy_defs[Object.keys(enemy_defs)[i]].animation[0].frameX,
+							enemy_defs[Object.keys(enemy_defs)[i]].animation[0].frameY,
+							16,
+							16,
+							8+mod(i-1,16)*16,
+							40+Math.trunc(i/16)*16,
+							16,
+							16
+						)
+					} else {
+						canvas.drawImage(
+							img_sprites, 
+							0,
+							0,
+							16,
+							16,
+							8+mod(i-1,16)*16,
+							40+Math.trunc(i/16)*16,
+							16,
+							16
+						)
+					}
+				}
 			}
 		}
 		
