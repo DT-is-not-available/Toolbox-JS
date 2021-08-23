@@ -231,6 +231,13 @@ class GameLayer_Class {
 			if (mouseButtons[2]) {
 				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
 			}
+		} else if (buildMode == 1) {
+			if (mouseButtons[0]) {
+				level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
+			}
+			if (mouseButtons[2]) {
+				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
+			}
 		}
 	}
 	edit_draw() {
@@ -245,6 +252,10 @@ class GameLayer_Class {
 		if (buildMode == 0) {
 			canvas.globalAlpha = 0.5
 			canvas.drawImage(img_tileset, tile_defs[tileBrush].tileX*16, tile_defs[tileBrush].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y, 16, 16);
+			canvas.globalAlpha = 1
+		} else if (buildMode == 1) {
+			canvas.globalAlpha = 0.5
+			canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX, enemy_defs[enemyBrush].animation[0].frameY, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
 			canvas.globalAlpha = 1
 		}
 		
