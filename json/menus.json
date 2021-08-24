@@ -166,7 +166,8 @@
 		],
 		"img": [
 			["img_tileset", 0, 0, 16, 16, 0, 12],
-			["img_sprites", 0, 0, 16, 16, 20, 12]
+			["img_sprites", 0, 0, 16, 16, 20, 12],
+			["img_mario", 40, 16, 16, 16, 40, 12]
 		],
 		"text_shadowed": [],
 		"options": [
@@ -179,6 +180,7 @@
 			["button", ["s", 14, 14], 226, 0, "menu", 16, 16, "level_options", true],
 			["button", [" ", 16, 16, true], 0, 12, "variable", ["buildMode"], 0],
 			["button", [" ", 16, 16, true], 20, 12, "variable", ["buildMode"], 1],
+			["button", [" ", 16, 16, true], 40, 12, "variable", ["buildMode"], 2],
 			["button", [" ", 240, 176, true], 0, 32, "function", "selectTile", []]
 		]
 	},
@@ -198,7 +200,7 @@
 			["HEIGHT:", 16, 40]
 		],
 		"variable": [
-			[["level", "settings", "camera"], 80, 16, false],
+			[["level", "settings", "camera"], 80, 16, true, ["CLASSIC", "CLASSIC 2-WAY", "SMB3", "NONE"]],
 			[["level", "settings", "enemy_high_jump"], 152, 24, false],
 			[["level", "settings", "width"], 72, 32, false],
 			[["level", "settings", "height"], 80, 40, false]
@@ -217,7 +219,7 @@
 			["function", "settings_sub", ["height", 0]]
 		],
 		"right_action": [
-			["function", "settings_add", ["camera", 2]],
+			["function", "settings_add", ["camera", 3]],
 			["disabled"],
 			["function", "settings_add", ["width"]],
 			["function", "settings_add", ["height"]]

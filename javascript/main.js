@@ -37,6 +37,19 @@ class GameLayer_Class {
 			}
 			
 			//enemies
+			solid_hitboxes = []
+			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
+				if (enemies[i].solid) solid_hitboxes.push([
+					{
+						X_neg: 0,
+						X_pos: enemies[i].entity.hitbox.X_pos+enemies[i].entity.hitbox.X_neg-2,
+						Y_neg: 0,
+						Y_pos: enemies[i].entity.hitbox.Y_pos+enemies[i].entity.hitbox.Y_neg-2
+					}, 
+					enemies[i].entity.x-enemies[i].entity.hitbox.X_neg+1, 
+					enemies[i].entity.y-enemies[i].entity.hitbox.Y_neg+1
+				])
+			}
 			
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
 				enemies[i].game();
@@ -231,6 +244,21 @@ class GameLayer_Class {
 			if (mouseButtons[2]) {
 				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
 			}
+		} else if (buildMode == 1) {
+			if (mouseButtons[0]) {
+				temp = true
+				if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
+					if (overlap({X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
+						temp = false
+				}
+				if (temp) level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
+			}
+			if (mouseButtons[2]) {
+				if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
+					if (overlap({X_neg:0,X_pos:0,Y_neg:0,Y_pos:0}, mouse[0]+camera_x, mouse[1]+camera_y, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
+						level.enemies.splice(i,1)
+				}
+			}
 		}
 	}
 	edit_draw() {
@@ -245,6 +273,10 @@ class GameLayer_Class {
 		if (buildMode == 0) {
 			canvas.globalAlpha = 0.5
 			canvas.drawImage(img_tileset, tile_defs[tileBrush].tileX*16, tile_defs[tileBrush].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y, 16, 16);
+			canvas.globalAlpha = 1
+		} else if (buildMode == 1) {
+			canvas.globalAlpha = 0.5
+			canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX, enemy_defs[enemyBrush].animation[0].frameY, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
 			canvas.globalAlpha = 1
 		}
 		
@@ -271,6 +303,33 @@ class GameLayer_Class {
 						16,
 						16
 					)
+				}
+				if (buildMode == 1) for (let i = 0; i < edit_menu.enemies.length; i++) {
+					if (typeof(enemy_defs[edit_menu.enemies[i]]) != 'undefined' && typeof(enemy_defs[edit_menu.enemies[i]].animation) != 'undefined') {
+						canvas.drawImage(
+							img_sprites, 
+							enemy_defs[edit_menu.enemies[i]].animation[0].frameX,
+							enemy_defs[edit_menu.enemies[i]].animation[0].frameY,
+							16,
+							16,
+							8+mod(i,16)*16,
+							40+Math.trunc(i/16)*16,
+							16,
+							16
+						)
+					} else {
+						canvas.drawImage(
+							img_sprites, 
+							0,
+							0,
+							16,
+							16,
+							8+mod(i,16)*16,
+							40+Math.trunc(i/16)*16,
+							16,
+							16
+						)
+					}
 				}
 			}
 		}
@@ -364,9 +423,12 @@ class GameLayer_Class {
 }
 
 function startGame(menu_stack=[]) {
+	temp = 0
+	solid_hitboxes = []
 	hit_block = new Block_class(0, 0, 0, -999)
 	world_timer = level.settings.timer
 	tileBrush = 0;
+	enemyBrush = "goomba";
 	menuOption = 0;
 	title_yv = 2;
 	title_y = 0;
@@ -375,7 +437,7 @@ function startGame(menu_stack=[]) {
 	lastLoop = Date.now()
 	if(window.location.hash) {
 		hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-		level = JSON.parse(atob(hash))
+		level = JSON.parse(atob(hash)); //Parses the hash as a .lvl2 file and loads the level
 	}
 	level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 	Mario = new Mario_Class(level.marioX,level.marioY)
@@ -422,7 +484,7 @@ function saveLevel(params) {
 }
 function exportLevel(params) {
 	quitMenu()
-	window.open('https://gdengine.github.io/MarioClone/js/#'+btoa(JSON.stringify(level)))
+	window.open('https://gdengine.github.io/Toolbox-JS/#'+btoa(JSON.stringify(level)))
 	addMenu(64, 92, "dialouge_export", false)
 }
 function newLevel(params) {
@@ -441,6 +503,10 @@ function openLevel(params) {
 function selectTile(params) {
 	if (buildMode == 0 && tile_defs[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]) {
 		tileBrush = Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16
+		quitMenu();
+	}
+	if (buildMode == 1 && edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]) {
+		enemyBrush = edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]
 		quitMenu();
 	}
 }

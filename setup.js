@@ -20,8 +20,8 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log("JSON Contents:");
-		console.log(JSON.parse(this.responseText));
+		
+		
 		tile_defs = JSON.parse(this.responseText);
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {
@@ -36,8 +36,8 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log("JSON Contents:");
-		console.log(JSON.parse(this.responseText));
+		
+		
 		edit_menu = JSON.parse(this.responseText);
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {
@@ -52,8 +52,8 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log("JSON Contents:");
-		console.log(JSON.parse(this.responseText));
+		
+		
 		font_defs = JSON.parse(this.responseText);
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {
@@ -68,8 +68,8 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log("JSON Contents:");
-		console.log(JSON.parse(this.responseText));
+		
+		
 		enemy_defs = JSON.parse(this.responseText);
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {
@@ -84,8 +84,8 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log("JSON Contents:");
-		console.log(JSON.parse(this.responseText));
+		
+		
 		level = JSON.parse(this.responseText);
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {
@@ -100,8 +100,8 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log("JSON Contents:");
-		console.log(JSON.parse(this.responseText));
+		
+		
 		menu_defs = JSON.parse(this.responseText);
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {

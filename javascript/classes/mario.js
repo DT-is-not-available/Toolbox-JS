@@ -23,7 +23,7 @@ class Mario_Class {
 		this.img_hitbox = {X_neg: 16, X_pos: 16, Y_neg: 32, Y_pos: 0}
 	}
 	game() {
-		if (!this.dead && !this.freezeWorld) {
+		if (!this.freezeWorld) {
 			if (this.powerup == 0) {
 				this.entity.hitbox = {X_neg: 6, X_pos: 6, Y_neg: 14, Y_pos: 0}
 			} else {
@@ -102,7 +102,8 @@ class Mario_Class {
 				this.entity.x = Math.round(camera_x)+250
 				if (this.entity.xv > 0) this.entity.xv = 0
 			}
-		} else if (this.dead) {
+		} 
+		if (this.dead) {
 			this.freezeWorld = true
 			this.frame = 1
 			this.powerup = 0
@@ -118,9 +119,9 @@ class Mario_Class {
 		}
 		if (this.entity.y > camera_y+272) this.dead = true
 		if (this.iframes > 0) this.iframes -= 1
-		if (this.damageframes > 0) this.damageframes -= 1
-		if (this.damageframes <= 0) this.freezeWorld = false
-		if (this.damageframes < 144 && !(this.damageframes === 0)) {
+		if (this.damageframes >= 0) this.damageframes -= 1
+		if (this.damageframes == 0) this.freezeWorld = false
+		if (this.damageframes < 144 && !(this.damageframes <= 0)) {
 			if (Math.trunc(this.damageframes/24) === Math.round(this.damageframes/24)) {
 				this.powerup = 0
 			} else {

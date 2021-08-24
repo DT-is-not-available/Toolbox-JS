@@ -102,20 +102,22 @@ function drawMenu(xpos, ypos, id, cursor=true, custom_draw=function(id){}) {
 	
 	if (menu_defs[id].variable && menu_defs[id].variable.length > 0) for (let i = 0; i < menu_defs[id].variable.length; i++) {
 		if (menu_defs[id].variable[i][0].length == 1) {
-			drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], window[menu_defs[id].variable[i][0][0]].toString().toUpperCase())
+			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 2) {
-			drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]].toString().toUpperCase())
+			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 3) {
-			drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]].toString().toUpperCase())
+			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 4) {
-			drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]].toString().toUpperCase())
+			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 5) {
-			drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]][menu_defs[id].variable[i][0][4]].toString().toUpperCase())
+			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]][menu_defs[id].variable[i][0][4]].toString().toUpperCase())
 		}
+		if (menu_defs[id].variable[i][3]) menuvar_temp = menu_defs[id].variable[i][4][menuvar_temp]
+		drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], menuvar_temp)
 	}
 	
 	if (cursor) canvas.drawImage(img_text, 120, 8, 8, 8, xpos+menu_defs[id].options[menuOption][0], ypos+menu_defs[id].options[menuOption][1], 8, 8)
@@ -186,7 +188,7 @@ function handleMenuAction(action, offset=2){
 }
 
 function settings_add(params) {
-	if (level.settings[params[0]] < params[1] || !level.settings[params[1]]) 
+	if (level.settings[params[0]] < params[1] || !params[1]) 
 		level.settings[params[0]] += 1
 }
 function settings_sub(params) {

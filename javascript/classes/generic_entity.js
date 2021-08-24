@@ -25,12 +25,12 @@ class Generic_entity_class {
 		if (this.yv > 28) {
 			this.yv = 28
 		}
+		this.y += this.yv/20
+		this.x += this.xv/20
 		this.onfloor = false
 		this.onceil = false
 		this.onleft = false
 		this.onright = false
-		this.y += this.yv/20
-		this.x += this.xv/20
 		/* if (this.tilecollision && this.tilecollisiontype == "mario_small") {
 			if ((this.yv >= 0 && typeof(level.temptiles[Math.round((this.x-12)/16)+","+Math.round((this.y-8)/16)]) != 'undefined' && tile_defs[level.temptiles[Math.round((this.x-12)/16)+","+Math.round((this.y-8)/16)]].collision.floor && level.temptiles[Math.round((this.x-12)/16)+","+Math.round((this.y-8)/16)] === level.temptiles[Math.round((this.x-12)/16)+","+Math.round((this.y+4)/16)]) || (this.yv >= 0 && typeof(level.temptiles[Math.round((this.x-4)/16)+","+Math.round((this.y-8)/16)]) != 'undefined' && tile_defs[level.temptiles[Math.round((this.x-4)/16)+","+Math.round((this.y-8)/16)]].collision.floor && level.temptiles[Math.round((this.x-4)/16)+","+Math.round((this.y-8)/16)] == level.temptiles[Math.round((this.x-4)/16)+","+Math.round((this.y+4)/16)])) {
 				this.yv = 0
@@ -135,6 +135,9 @@ class Generic_entity_class {
 				if (typeof(level.temptiles[posToTile(this.x-this.hitbox.X_neg)+","+posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))]) != 'undefined') {
 					this.solidcollide({X_neg: 0, X_pos: 16, Y_neg: 0, Y_pos: 16}, posToTile(this.x-this.hitbox.X_neg)*16, posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))*16, tile_defs[level.tiles[posToTile(this.x-this.hitbox.X_neg)+","+posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))]].collision)
 				}
+			}
+			for (let i = 0; i < solid_hitboxes.length; i++) {
+				this.solidcollide(solid_hitboxes[i][0], solid_hitboxes[i][1], solid_hitboxes[i][2])
 			}
 		}
 		if (this.yv < 0) this.yv += this.up_gravity
