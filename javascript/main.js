@@ -232,6 +232,8 @@ class GameLayer_Class {
 				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
 			}
 		} else if (buildMode == 1) {
+			if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
+			}
 			if (mouseButtons[0]) {
 				level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
 			}
