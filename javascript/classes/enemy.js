@@ -51,21 +51,25 @@ class Baddie_Class {
 			this.entity.xv = this.speed*5*this.direction
 			if (this.entity.onleft) {
 				this.direction = 1
-				this.mirror = false
+				this.mirror = true
 			}
 			if (this.entity.onright) {
 				this.direction = -1
-				this.mirror = true
+				this.mirror = false
 			}
-		}
-		for (let i = 0; i < enemies.length; i++) {
-			if (!(enemies[i] == this) && !enemies[i].dead && enemies[i].enemycollision && this.enemycollision && overlap(enemies[i].entity.hitbox, enemies[i].entity.x, enemies[i].entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
-				if (this.entity.x > enemies[i].entity.x) {
-					this.direction = 1
-					enemies[i].direction = -1
-				} else {
-					this.direction = -1
-					enemies[i].direction = 1
+			for (let i = 0; i < enemies.length; i++) {
+				if (!(enemies[i] == this) && !enemies[i].dead && enemies[i].enemycollision && this.enemycollision && overlap(enemies[i].entity.hitbox, enemies[i].entity.x, enemies[i].entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
+					if (this.entity.x > enemies[i].entity.x) {
+						this.direction = 1
+						this.mirror = true
+						enemies[i].direction = -1
+						enemies[i].mirror = false
+					} else {
+						this.direction = -1
+						this.mirror = false
+						enemies[i].direction = 1
+						enemies[i].mirror = true
+					}
 				}
 			}
 		}
@@ -83,8 +87,8 @@ class Baddie_Class {
 		if (onscreen(this.img_hitbox, this.entity.rx, this.entity.ry)) {
 			this.flipvalue = 1
 			this.mirrorvalue = 1
-			if (this.flip) this.flipvalue = -1
-			if (this.mirror) this.mirrorvalue = -1
+			if (this.flip) this.flipvalue = 1
+			if (this.mirror && this.mirrors) this.mirrorvalue = -1
 			canvas.scale(this.mirrorvalue, this.flipvalue);
 			canvas.drawImage(
 				img_sprites,

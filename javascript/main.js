@@ -37,6 +37,19 @@ class GameLayer_Class {
 			}
 			
 			//enemies
+			solid_hitboxes = []
+			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
+				if (enemies[i].solid) solid_hitboxes.push([
+					{
+						X_neg: 0,
+						X_pos: enemies[i].entity.hitbox.X_pos+enemies[i].entity.hitbox.X_neg-2,
+						Y_neg: 0,
+						Y_pos: enemies[i].entity.hitbox.Y_pos+enemies[i].entity.hitbox.Y_neg-2
+					}, 
+					enemies[i].entity.x-enemies[i].entity.hitbox.X_neg+1, 
+					enemies[i].entity.y-enemies[i].entity.hitbox.Y_neg+1
+				])
+			}
 			
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
 				enemies[i].game();
@@ -232,13 +245,19 @@ class GameLayer_Class {
 				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
 			}
 		} else if (buildMode == 1) {
-			if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
-			}
 			if (mouseButtons[0]) {
-				level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
+				temp = true
+				if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
+					if (overlap({X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
+						temp = false
+				}
+				if (temp) level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
 			}
 			if (mouseButtons[2]) {
-				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
+				if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
+					if (overlap({X_neg:0,X_pos:0,Y_neg:0,Y_pos:0}, mouse[0]+camera_x, mouse[1]+camera_y, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
+						level.enemies.splice(i,1)
+				}
 			}
 		}
 	}
@@ -404,6 +423,8 @@ class GameLayer_Class {
 }
 
 function startGame(menu_stack=[]) {
+	temp = 0
+	solid_hitboxes = []
 	hit_block = new Block_class(0, 0, 0, -999)
 	world_timer = level.settings.timer
 	tileBrush = 0;

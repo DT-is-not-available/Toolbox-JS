@@ -20,7 +20,9 @@
 		},
 		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
 		"tilecollision": true,
-		"enemycollision": true
+		"enemycollision": true,
+		"solid": false,
+		"mirrors": true
 	},
 	"goomba": {
 		"animation": [
@@ -32,19 +34,86 @@
 				"frameX": 16,
 				"frameY": 0
 			}
-		]
+		],
+		"mirrors": false
+	},
+	"spiny": {
+		"canStomp": false,
+		"animation": [
+			{
+				"frameX": 144,
+				"frameY": 0
+			},
+			{
+				"frameX": 160,
+				"frameY": 0
+			}
+		],
+		"deathAnimation": false
+	},
+	"poison_mushroom": {
+		"canStomp": false,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 224,
+				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false
 	},
 	"bullet_bill": {
-		"speed": 2,
-		"gravity": 0,
-		"deathAnimation": false,
+		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
 		"animation": [
 			{
 				"frameX": 48,
 				"frameY": 0
 			}
 		],
+		"speed": 2,
+		"gravity": 0,
+		"deathAnimation": false,
 		"tilecollision": false,
 		"enemycollision": false
+	},
+	"muncher": {
+		"speed": 0,
+		"canStomp": false,
+		"solid": false,
+		"hitbox": {"X_neg": 8, "X_pos": 8, "Y_neg": 16, "Y_pos": 0},
+		"animation": [
+			{
+				"frameX": 144,
+				"frameY": 40
+			},
+			{
+				"frameX": 160,
+				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false
+	},
+	"plant": {
+		"speed": 0,
+		"canStomp": false,
+		"solid": false,
+		"hitbox": {"X_neg": 8, "X_pos": 8, "Y_neg": 16, "Y_pos": 0},
+		"animation": [
+			{
+				"frameX": 96,
+				"frameY": 16
+			},
+			{
+				"frameX": 112,
+				"frameY": 16
+			}
+		],
+		"animationWidth": 16,
+		"animationHeight": 24,
+		"deathAnimation": false,
+		"mirrors": false
 	}
 }
