@@ -87,7 +87,7 @@ class Baddie_Class {
 		if (onscreen(this.img_hitbox, this.entity.rx, this.entity.ry)) {
 			this.flipvalue = 1
 			this.mirrorvalue = 1
-			if (this.flip) this.flipvalue = 1
+			if (this.flip) this.flipvalue = -1
 			if (this.mirror && this.mirrors) this.mirrorvalue = -1
 			canvas.scale(this.mirrorvalue, this.flipvalue);
 			canvas.drawImage(

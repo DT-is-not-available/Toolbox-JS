@@ -276,7 +276,10 @@ class GameLayer_Class {
 			canvas.globalAlpha = 1
 		} else if (buildMode == 1) {
 			canvas.globalAlpha = 0.5
-			canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX, enemy_defs[enemyBrush].animation[0].frameY, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
+			temp = [16,16]
+			if (!(typeof(enemy_defs[enemyBrush].animationWidth) == 'undefined')) temp[0] = enemy_defs[enemyBrush].animationWidth
+			if (!(typeof(enemy_defs[enemyBrush].animationHeight) == 'undefined')) temp[1] =enemy_defs[enemyBrush].animationHeight
+			canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX+temp[0]/2-8, enemy_defs[enemyBrush].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
 			canvas.globalAlpha = 1
 		}
 		
@@ -335,17 +338,33 @@ class GameLayer_Class {
 		}
 		
 		//marioStart
-		canvas.drawImage(img_markers, 0, 0, 16, 16, level.marioX-8-camera_x, level.marioY-15-camera_y, 16, 16)
+		canvas.drawImage(img_ui, 0, 0, 16, 16, level.marioX-8-camera_x, level.marioY-15-camera_y, 16, 16)
 		
 		//enemies
 		if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
 			//drawImage(image, image x, image y, image width, image height, x pos, y pos, width, height)
 			if (!(typeof(enemy_defs[level.enemies[i][0]]) == 'undefined')) {
+				
+				temp = [16,16]
+				if (!(typeof(enemy_defs[level.enemies[i][0]].animationWidth) == 'undefined')) temp[0] = enemy_defs[level.enemies[i][0]].animationWidth
+				if (!(typeof(enemy_defs[level.enemies[i][0]].animationHeight) == 'undefined')) temp[1] = enemy_defs[level.enemies[i][0]].animationHeight
+				
 				if (!(typeof(enemy_defs[level.enemies[i][0]].animation) == 'undefined')) {
-					canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX, enemy_defs[level.enemies[i][0]].animation[0].frameY, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
+					if (!(level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]+1)) {
+						canvas.globalAlpha = 0.5
+						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX, enemy_defs[level.enemies[i][0]].animation[0].frameY, temp[0], temp[1], level.enemies[i][1]-8-camera_x-temp[0]/2+8, level.enemies[i][2]-15-camera_y-temp[1]+16, temp[0], temp[1])
+						canvas.globalAlpha = 1
+						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX+temp[0]/2-8, enemy_defs[level.enemies[i][0]].animation[0].frameY+temp[1]-16, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
+					} else {
+						canvas.globalAlpha = 0.5
+						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX+temp[0]/2-8, enemy_defs[level.enemies[i][0]].animation[0].frameY+temp[1]-16, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-16-camera_y, 16, 16)
+						canvas.globalAlpha = 1
+						canvas.drawImage(img_ui, 38, 6, 8, 10, level.enemies[i][1]-4-camera_x, level.enemies[i][2]-13-camera_y, 8, 10)
+					}
 				} else {
 					canvas.drawImage(img_sprites, enemy_defs["inherit"].animation[0].frameX, enemy_defs["inherit"].animation[0].frameY, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
 				}
+				
 			} else {
 				canvas.drawImage(img_error, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
 			}

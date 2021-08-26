@@ -1,4 +1,5 @@
-const canvas = document.getElementById('canvas').getContext('2d');
+const canvas_element = document.getElementById('canvas')
+const canvas = canvas_element.getContext('2d');
 const debug = document.getElementsByClassName('debug');
 var fps = 60
 var debug_mode = false
@@ -8,6 +9,26 @@ mouseButtons = [false, false, false]
 mouseButtons_onpress = [false, false, false]
 mouse = [0, 0]
 loopStarted = false
+
+function recolor(oldimg, color, alpha=1){
+	canvas.canvas.width  = 1000;
+	canvas.canvas.height = 1000;
+	canvas.scale(1, 1);
+	canvas.globalAlpha = alpha
+	canvas.clearRect(0,0,canvas_element.width,canvas_element.height);
+	canvas.fillStyle=color;
+	canvas.rect(0,0,canvas_element.width,canvas_element.height);
+	canvas.fill();
+	canvas.globalCompositeOperation = "destination-atop";
+	canvas.globalAlpha = 1
+	canvas.drawImage(oldimg, 0, 0);
+	canvas.globalCompositeOperation = "darken";
+	canvas.drawImage(oldimg, 0, 0);
+	let img=new Image();
+	img.src=canvas_element.toDataURL();
+	setScale(canvas_scale)
+	return(img);
+}
 
 setScaleAuto();
 
@@ -152,10 +173,10 @@ img_flagpole.onload = function() {
 	}
 };
 
-img_markers = new Image();
+img_ui = new Image();
 // new file
-img_markers.src = 'images/markerui.png';
-img_markers.onload = function() {
+img_ui.src = 'images/ui.png';
+img_ui.onload = function() {
     filesLoaded += 1
 	if (filesLoaded >= filesNeeded) {
 		startGame();
@@ -196,6 +217,7 @@ img_sprites = new Image();
 // new file
 img_sprites.src = 'images/sprites.png';
 img_sprites.onload = function() {
+	img_sprites_select = recolor(img_sprites, 'rgba(0, 255, 0)')
     filesLoaded += 1
 	if (filesLoaded >= filesNeeded) {
 		startGame();
