@@ -350,7 +350,7 @@ class GameLayer_Class {
 				if (!(typeof(enemy_defs[level.enemies[i][0]].animationHeight) == 'undefined')) temp[1] = enemy_defs[level.enemies[i][0]].animationHeight
 				
 				if (!(typeof(enemy_defs[level.enemies[i][0]].animation) == 'undefined')) {
-					if (!(level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]+1)) {
+					if (!(level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]+1) || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]] || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction.isContainer) {
 						canvas.globalAlpha = 0.5
 						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX, enemy_defs[level.enemies[i][0]].animation[0].frameY, temp[0], temp[1], level.enemies[i][1]-8-camera_x-temp[0]/2+8, level.enemies[i][2]-15-camera_y-temp[1]+16, temp[0], temp[1])
 						canvas.globalAlpha = 1
