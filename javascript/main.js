@@ -24,9 +24,12 @@ class GameLayer_Class {
 			//level timer
 			
 			world_timer -= 1/240
-			if (world_timer < 0) {
+			if (world_timer < 0 && level.settings.timer != 0) {
 				world_timer = 0
 				Mario.dead = true
+			}
+			if (world_timer > 99999) {
+				world_timer = 99999
 			}
 			
 			//particles
@@ -53,28 +56,6 @@ class GameLayer_Class {
 			
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
 				enemies[i].game();
-				if (!enemies[i].dead && overlap(Mario.entity.hitbox, Mario.entity.x, Mario.entity.y, enemies[i].entity.hitbox, enemies[i].entity.x, enemies[i].entity.y)) {
-					if ((Mario.entity.y < enemies[i].entity.y || Mario.entity.yv > Mario.entity.gravity)&& enemies[i].canStomp) {
-						Mario.entity.yv = -20
-						Mario.enemy_combo += 1
-						if (Mario.enemy_combo < 8) {
-							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][Mario.enemy_combo]
-//Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
-							particles.push(new Particle_class(enemies[i].entity.x, enemies[i].entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][Mario.enemy_combo], [11, 12, 12, 12, 15, 16, 16, 16][Mario.enemy_combo], 8, 0, 45))
-						} else {
-							particles.push(new Particle_class(enemies[i].entity.x, enemies[i].entity.y-8, 0, -1, 0, 32, 16, 7, 0, 45))
-						}
-						if (level.settings.enemy_high_jump) Mario.jumptimer = 90
-						enemies[i].dead = true
-						if (!enemies[i].deathAnimation) {
-							enemies[i].flip = true
-							enemies[i].entity.yv = -10
-							enemies[i].entity.gravity = 0.5
-						}
-					} else {
-						if (enemies[i].kills) Mario.damage()
-					}
-				}
 				if (enemies[i].delete) {
 					enemies.splice(i,1)
 				}
@@ -155,7 +136,7 @@ class GameLayer_Class {
 		
 		if (!debug_mode) {
 			drawText(0, 8, "   MARIO          WORLD  TIME")
-			drawText(0, 16, "   "+Mario.score.toString().padStart(6,'0').padEnd(8,' ')+" x"+Mario.coins.toString().padStart(2,'0')+"    1-1  "+Math.trunc(world_timer).toString().padStart(3,'0').padStart(5,' '))
+			drawText(0, 16, "   "+Mario.score.toString().padStart(6,'0').padEnd(8,' ')+" x"+Mario.coins.toString().padStart(2,'0')+"    1-1  "+Math.trunc(Math.abs(world_timer)).toString().padStart(3,'0').padStart(5,' '))
 			canvas.drawImage(img_text, [136, 136, 136, 136+8, 136+16, 136+8][mod(Math.round(tileanim_timer), 6)], 8, 8, 8, 88, 16, 8, 8)
 		}
 		
@@ -236,7 +217,7 @@ class GameLayer_Class {
 		}
 		tileanim_timer += 0.03
 		
-		//tile building
+		//building
 		if (buildMode == 0) {
 			if (mouseButtons[0]) {
 				level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)] = tileBrush
@@ -258,6 +239,11 @@ class GameLayer_Class {
 					if (overlap({X_neg:0,X_pos:0,Y_neg:0,Y_pos:0}, mouse[0]+camera_x, mouse[1]+camera_y, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
 						level.enemies.splice(i,1)
 				}
+			}
+		} else if (buildMode == 2) {
+			if (mouseButtons[0]) {
+				level.marioX = Math.trunc((mouse[0]+camera_x+4)/8)*8
+				level.marioY = Math.trunc((mouse[1]+camera_y+12)/8)*8
 			}
 		}
 	}
@@ -508,9 +494,8 @@ function exportLevel(params) {
 }
 function newLevel(params) {
 	menus = []
-	level = JSON.parse(atob(
+	loadLevel(atob(
 	"eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="
-	
 	))
 	g_layer.edit()
 }
@@ -536,7 +521,11 @@ function loadEnemies() {
 		if (typeof(enemy_defs[level.enemies[i][0]]) == 'undefined') {
 			console.warn("This level may be corrupt, or it is being loaded in the wrong version of the game.")
 		} else {
-			enemies.push(new Baddie_Class(level.enemies[i][1], level.enemies[i][2], level.enemies[i][0]))
+			if (!(level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]+1) || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]] || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction.isContainer) {
+				enemies.push(new Baddie_Class(level.enemies[i][1], level.enemies[i][2], level.enemies[i][0]))
+			} else {
+				console.log("contained enemy placeholder")
+			}
 		}
 	}
 }
@@ -575,10 +564,15 @@ function renderloop() {
 
 function activateTile(x, y) {
 //Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
-	if (tile_defs[level.temptiles[x+","+y]].interaction.hasCoin) {
-		particles.push(new Particle_class((x+0.5)*16, y*16, 0, -7, 32, 8, 8, 14, 0.45, 30, 4, 3))
-		Mario.coins += 1
+	if (!(level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 }))) {
+		if (tile_defs[level.temptiles[x+","+y]].interaction.hasCoin) {
+			particles.push(new Particle_class((x+0.5)*16, y*16, 0, -7, 32, 8, 8, 14, 0.45, 30, 4, 3))
+			Mario.coins += 1
+			level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
+		}
+	} else {
 		level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
+		enemies.push(new Baddie_Class(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
 	}
 	hit_block = new Block_class(x, y)
 }

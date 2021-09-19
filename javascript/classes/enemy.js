@@ -72,6 +72,28 @@ class Baddie_Class {
 					}
 				}
 			}
+			if (overlap(Mario.entity.hitbox, Mario.entity.x, Mario.entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
+				if ((Mario.entity.y < this.entity.y || Mario.entity.yv > Mario.entity.gravity)&& this.canStomp) {
+					Mario.entity.yv = -20
+					Mario.enemy_combo += 1
+					if (Mario.enemy_combo < 8) {
+						Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][Mario.enemy_combo]
+		//Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
+						particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][Mario.enemy_combo], [11, 12, 12, 12, 15, 16, 16, 16][Mario.enemy_combo], 8, 0, 45))
+					} else {
+						particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, 32, 16, 7, 0, 45))
+					}
+					if (level.settings.enemy_high_jump) Mario.jumptimer = 90
+					this.dead = true
+					if (!this.deathAnimation) {
+						this.flip = true
+						this.entity.yv = -10
+						this.entity.gravity = 0.5
+					}
+				} else {
+					if (this.kills) Mario.damage()
+				}
+			}
 		}
 	}
 	draw() {

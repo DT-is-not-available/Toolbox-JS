@@ -194,35 +194,46 @@
 		"text": [
 			["LEVEL SETTINGS", 0, 0],
 			["PRESS ESC TO EXIT", 0, 200],
-			["CAMERA:", 16, 16],
-			["ENEMY HIGH JUMP:", 16, 24],
-			["WIDTH:", 16, 32],
-			["HEIGHT:", 16, 40]
+			["HOLD SHIFT TO CHANGE BY 10", 0, 192],
+			["GAMEPLAY:", 16, 16],
+			["CAMERA:", 16, 24],
+			["ENEMY HIGH JUMP:", 16, 32],
+			["WIDTH:", 16, 40],
+			["HEIGHT:", 16, 48],
+			["TIME:", 16, 56],
+			["OLD PARTICLES: FALSE", 16, 64, 0.5]
 		],
 		"variable": [
-			[["level", "settings", "camera"], 80, 16, true, ["CLASSIC", "CLASSIC 2-WAY", "SMB3", "NONE"]],
-			[["level", "settings", "enemy_high_jump"], 152, 24, false],
-			[["level", "settings", "width"], 72, 32, false],
-			[["level", "settings", "height"], 80, 40, false]
+			[["level", "settings", "camera"], 80, 24, true, ["CLASSIC", "CLASSIC 2-WAY", "SMB3", "NONE"]],
+			[["level", "settings", "enemy_high_jump"], 152, 32, false],
+			[["level", "settings", "width"], 72, 40, false],
+			[["level", "settings", "height"], 80, 48, false],
+			[["level", "settings", "timer"], 64, 56, false]
 		],
 		"text_shadowed": [],
 		"options": [
-			[0, 16, "disabled"],
-			[0, 24, "function", "settings_toggle", ["enemy_high_jump", 0]],
-			[0, 32, "disabled"],
-			[0, 40, "disabled"]
+			[0, 24, "disabled"],
+			[0, 32, "function", "settings_toggle", ["enemy_high_jump", 0]],
+			[0, 40, "disabled"],
+			[0, 48, "disabled"],
+			[0, 56, "disabled"],
+			[0, 64, "disabled"]
 		],
 		"left_action": [
 			["function", "settings_sub", ["camera", 0]],
 			["disabled"],
 			["function", "settings_sub", ["width", 0]],
-			["function", "settings_sub", ["height", 0]]
+			["function", "settings_sub", ["height", 0]],
+			["function", "settings_sub", ["timer", 0]],
+			["disabled"]
 		],
 		"right_action": [
 			["function", "settings_add", ["camera", 3]],
 			["disabled"],
 			["function", "settings_add", ["width"]],
-			["function", "settings_add", ["height"]]
+			["function", "settings_add", ["height"]],
+			["function", "settings_add", ["timer"], 99999],
+			["disabled"]
 		]
 	}
 }

@@ -188,12 +188,23 @@ function handleMenuAction(action, offset=2){
 }
 
 function settings_add(params) {
-	if (level.settings[params[0]] < params[1] || !params[1]) 
-		level.settings[params[0]] += 1
+	if (keyboard_Shift) {
+		if (level.settings[params[0]]+9 < params[1] || !params[1]) 
+			level.settings[params[0]] += 10
+	} else {
+		if (level.settings[params[0]] < params[1] || !params[1]) 
+			level.settings[params[0]] += 1
+	}
 }
 function settings_sub(params) {
-	if (level.settings[params[0]] > params[1]) 
-		level.settings[params[0]] -= 1
+	if (keyboard_Shift) {
+		if (level.settings[params[0]]-9 > params[1]) 
+			level.settings[params[0]] -= 10
+		
+	} else {
+		if (level.settings[params[0]] > params[1]) 
+			level.settings[params[0]] -= 1
+	}
 }
 function settings_toggle(params) {
 	level.settings[params[0]] = (!level.settings[params[0]])
