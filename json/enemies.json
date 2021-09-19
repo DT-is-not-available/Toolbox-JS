@@ -22,7 +22,9 @@
 		"tilecollision": true,
 		"enemycollision": true,
 		"solid": false,
-		"mirrors": true
+		"mirrors": true,
+		"turnonedge": false,
+		"blockimmune": true
 	},
 	"goomba": {
 		"animation": [
@@ -36,6 +38,59 @@
 			}
 		],
 		"mirrors": false
+	},
+	"large_goomba": {
+		"animationWidth": 32,
+		"animationHeight": 32,
+		"deathFrame": {
+			"frameX": 64,
+			"frameY": 56
+		},
+		"hitbox": {"X_neg": 13, "X_pos": 13, "Y_neg": 26, "Y_pos": 0},
+		"animation": [
+			{
+				"frameX": 0,
+				"frameY": 56
+			},
+			{
+				"frameX": 32,
+				"frameY": 56
+			}
+		],
+		"mirrors": false
+	},
+	"banzai_bill": {
+		"animationWidth": 32,
+		"animationHeight": 32,
+		"animation": [
+			{
+				"frameX": 96,
+				"frameY": 56
+			}
+		],
+		"hitbox": {"X_neg": 13, "X_pos": 13, "Y_neg": 26, "Y_pos": 0},
+		"speed": 2,
+		"gravity": 0,
+		"deathAnimation": false,
+		"tilecollision": false,
+		"enemycollision": false
+	},
+	"goombrat": {
+		"animation": [
+			{
+				"frameX": 0,
+				"frameY": 0
+			},
+			{
+				"frameX": 16,
+				"frameY": 0
+			}
+		],
+		"mirrors": false,
+		"deathFrame": {
+			"frameX": 32,
+			"frameY": 0
+		}
 	},
 	"spiny": {
 		"canStomp": false,
@@ -65,7 +120,6 @@
 		"enemycollision": false
 	},
 	"bullet_bill": {
-		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
 		"animation": [
 			{
 				"frameX": 48,
@@ -100,7 +154,7 @@
 		"speed": 0,
 		"canStomp": false,
 		"solid": false,
-		"hitbox": {"X_neg": 8, "X_pos": 8, "Y_neg": 16, "Y_pos": 0},
+		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 18, "Y_pos": 0},
 		"animation": [
 			{
 				"frameX": 96,

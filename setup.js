@@ -1,4 +1,5 @@
-const canvas = document.getElementById('canvas').getContext('2d');
+const canvas_element = document.getElementById('canvas')
+const canvas = canvas_element.getContext('2d');
 const debug = document.getElementsByClassName('debug');
 var fps = 60
 var debug_mode = false
@@ -8,6 +9,26 @@ mouseButtons = [false, false, false]
 mouseButtons_onpress = [false, false, false]
 mouse = [0, 0]
 loopStarted = false
+
+function recolor(oldimg, color, alpha=1){
+	canvas.canvas.width  = 1000;
+	canvas.canvas.height = 1000;
+	canvas.scale(1, 1);
+	canvas.globalAlpha = alpha
+	canvas.clearRect(0,0,canvas_element.width,canvas_element.height);
+	canvas.fillStyle=color;
+	canvas.rect(0,0,canvas_element.width,canvas_element.height);
+	canvas.fill();
+	canvas.globalCompositeOperation = "destination-atop";
+	canvas.globalAlpha = 1
+	canvas.drawImage(oldimg, 0, 0);
+	canvas.globalCompositeOperation = "darken";
+	canvas.drawImage(oldimg, 0, 0);
+	let img=new Image();
+	img.src=canvas_element.toDataURL();
+	setScale(canvas_scale)
+	return(img);
+}
 
 setScaleAuto();
 
@@ -84,9 +105,7 @@ var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		
-		
-		level = JSON.parse(this.responseText);
+		//loadLevel(this.responseText)
 		filesLoaded += 1
 		if (filesLoaded >= filesNeeded) {
 			startGame();
@@ -95,6 +114,12 @@ xhttp.onreadystatechange = function() {
 };
 xhttp.open("GET", "./json/leveltest.json", true);
 xhttp.send();
+
+//select random template level
+template_levels = [
+	'eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjI0LCJtYXJpb1kiOjE2LCJzZXR0aW5ncyI6eyJjYW1lcmEiOjEsImhlaWdodCI6MCwid2lkdGgiOjE2LCJlbmVteV9oaWdoX2p1bXAiOnRydWUsInRpbWVyIjo0MDAsIm9sZHBhcnRpY2xlcyI6ZmFsc2V9LCJ0aWxlcyI6eyI5LDgiOjEsIjEwLDgiOjEsIjExLDgiOjEsIjEyLDgiOjEsIjEzLDgiOjEsIjE0LDgiOjEsIjE1LDgiOjEsIjAsMTMiOjQsIjEsMTMiOjQsIjIsMTMiOjQsIjMsMTMiOjQsIjQsMTMiOjAsIjYsMTMiOjAsIjYsMTIiOjQsIjYsMTEiOjAsIjYsMTAiOjAsIjYsOSI6MCwiNiw4IjowLCIxMyw5Ijo0LCI3LDEzIjowLCI4LDEzIjowLCI5LDEzIjowLCIxMCwxMyI6MCwiMTEsMTMiOjAsIjEyLDEzIjowLCIxMywxMyI6MCwiMTQsMTMiOjAsIjE1LDEzIjowLCIxNiwxMyI6MCwiMTcsMTMiOjAsIjE4LDEzIjowLCIxOSwxMyI6MCwiMjAsMTMiOjAsIjIxLDEzIjowLCIyMiwxMyI6MCwiMjMsMTMiOjAsIjI0LDEzIjowLCIyNSwxMyI6MCwiMjYsMTMiOjAsIjI3LDEzIjowLCIyOCwxMyI6MCwiMjksMTMiOjAsIjMwLDEzIjowLCIzMSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltbImdvb21iYSIsNDgsNDhdLFsiZ29vbWJhIiw5Niw0OF0sWyJnb29tYmEiLDEyOCw0OF0sWyJnb29tYmEiLDE0NCw0OF0sWyJidWxsZXRfYmlsbCIsMTI4LDE0NF1dLCJ0ZW1wdGlsZXMiOnsiOSw4IjoxLCIxMCw4IjoxLCIxMSw4IjoxLCIxMiw4IjoxLCIxMyw4IjoxLCIxNCw4IjoxLCIxNSw4IjoxLCIwLDEzIjo0LCIxLDEzIjo0LCIyLDEzIjo0LCIzLDEzIjo0LCI0LDEzIjowLCI2LDEzIjowLCI2LDEyIjo0LCI2LDExIjowLCI2LDEwIjowLCI2LDkiOjAsIjYsOCI6MCwiMTMsOSI6NCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMTYsMTMiOjAsIjE3LDEzIjowLCIxOCwxMyI6MCwiMTksMTMiOjAsIjIwLDEzIjowLCIyMSwxMyI6MCwiMjIsMTMiOjAsIjIzLDEzIjowLCIyNCwxMyI6MCwiMjUsMTMiOjAsIjI2LDEzIjowLCIyNywxMyI6MCwiMjgsMTMiOjAsIjI5LDEzIjowLCIzMCwxMyI6MCwiMzEsMTMiOjAsIjAsMTQiOjAsIjEsMTQiOjAsIjIsMTQiOjAsIjMsMTQiOjAsIjQsMTQiOjAsIjUsMTQiOjAsIjYsMTQiOjAsIjcsMTQiOjAsIjgsMTQiOjAsIjksMTQiOjAsIjEwLDE0IjowLCIxMSwxNCI6MCwiMTIsMTQiOjAsIjEzLDE0IjowLCIxNCwxNCI6MCwiMTUsMTQiOjB9fQ=='
+]
+loadLevel(atob(template_levels[Math.trunc(Math.random()*template_levels.length)]))
 
 var xhttp = new XMLHttpRequest();
 // new file
@@ -152,10 +177,10 @@ img_flagpole.onload = function() {
 	}
 };
 
-img_markers = new Image();
+img_ui = new Image();
 // new file
-img_markers.src = 'images/markerui.png';
-img_markers.onload = function() {
+img_ui.src = 'images/ui.png';
+img_ui.onload = function() {
     filesLoaded += 1
 	if (filesLoaded >= filesNeeded) {
 		startGame();
@@ -196,6 +221,7 @@ img_sprites = new Image();
 // new file
 img_sprites.src = 'images/sprites.png';
 img_sprites.onload = function() {
+	img_sprites_select = recolor(img_sprites, 'rgba(0, 255, 0)')
     filesLoaded += 1
 	if (filesLoaded >= filesNeeded) {
 		startGame();

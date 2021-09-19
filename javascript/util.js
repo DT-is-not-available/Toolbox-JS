@@ -1,6 +1,8 @@
 function resetkeys() {
 	keyboard = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
+	keyboard_Shift = false
 }
+keyboard_Shift = false
 
 function onscreen(hitbox_1, x_p, y_p) {
 	return overlap(hitbox_1, x_p, y_p, {X_pos: 256, X_neg: 0, Y_pos: 240, Y_neg: 0}, Math.round(camera_x), Math.round(camera_y))
@@ -83,10 +85,16 @@ function getOffset( el ) {
 function readLevel(file) {
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
-    level = JSON.parse(atob(event.target.result));
+    loadLevel(atob(event.target.result))
 	g_layer.edit()
   });
   reader.readAsText(file);
+}
+
+function loadLevel(levelstring) {
+	level = JSON.parse(levelstring);
+	if (typeof(level.settings.oldparticles) === "undefined") level.settings.oldparticles = false
+	if (typeof(level.settings.time) === "undefined") level.settings.timer = 400
 }
 
 //input
@@ -118,6 +126,7 @@ document.addEventListener('keydown', function(event) {
         //console.log('Shift was pressed');
 		if (!keyboard.Shift) keyboard_onpress.Shift = true
 		keyboard.Shift = true
+		keyboard_Shift = true
     }
     else if(event.keyCode == 32) {
         //console.log('Space was pressed');
@@ -160,6 +169,7 @@ document.addEventListener('keyup', function(event) {
     else if(event.keyCode == 16) {
         //console.log('Shift was released');
 		keyboard.Shift = false
+		keyboard_Shift = false
 		keyboard_onpress.Shift = false
     }
     else if(event.keyCode == 32) {
