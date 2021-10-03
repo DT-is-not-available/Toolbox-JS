@@ -127,3 +127,43 @@ class Baddie_Class {
 		}
 	}
 }
+class Enemy_block_animation {
+	constructor(xpos, ypos, id) {
+		this.x = xpos
+		this.y = ypos
+		this.id = id
+		this.emergetimer = 0
+		this.frameX = enemy_defs[id].animation[0].frameX
+		this.frameY = enemy_defs[id].animation[0].frameY
+		this.animationWidth = (function(){if(typeof(enemy_defs[id].animationWidth) == "undefined"){return enemy_defs.inherit.animationWidth}else{return enemy_defs[id].animationWidth}})()
+		this.animationHeight = (function(){if(typeof(enemy_defs[id].animationWidth) == "undefined"){return enemy_defs.inherit.animationHeight}else{return enemy_defs[id].animationHeight}})()
+		this.img_hitbox = {X_neg: this.animationWidth/2, X_pos: this.animationWidth/2, Y_neg: this.animationHeight, Y_pos: 0}
+		this.flipvalue = 1
+		this.mirrorvalue = 1
+	}
+	game(id) {
+		this.emergetimer += 0.125
+		if (Math.trunc(this.emergetimer) >= this.animationHeight) {
+			enemies.push(new Baddie_Class(this.x, this.y, this.id))
+			bgparticles.splice(id,1)
+		}
+	}
+	draw(id) {
+		//drawImage(image, image x, image y, image width, image height, x pos, y pos, width, height)
+		if (onscreen(this.img_hitbox, this.x, this.y)) {
+			canvas.scale(this.mirrorvalue, this.flipvalue);
+			canvas.drawImage(
+				img_sprites,
+				this.frameX,
+				this.frameY,
+				(this.img_hitbox.X_neg+this.img_hitbox.X_pos),
+				Math.trunc(this.emergetimer),
+				this.mirrorvalue*(-Math.round(camera_x)+this.x)-(this.img_hitbox.X_neg+this.img_hitbox.X_pos)/2,
+				this.y+1-Math.trunc(this.emergetimer),
+				(this.img_hitbox.X_neg+this.img_hitbox.X_pos),
+				Math.trunc(this.emergetimer)
+			);
+			canvas.scale(this.mirrorvalue, this.flipvalue);
+		}
+	}
+}

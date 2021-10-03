@@ -37,7 +37,8 @@
 				"frameY": 0
 			}
 		],
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	},
 	"large_goomba": {
 		"animationWidth": 32,
@@ -57,7 +58,8 @@
 				"frameY": 56
 			}
 		],
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	},
 	"banzai_bill": {
 		"animationWidth": 32,
@@ -90,7 +92,8 @@
 		"deathFrame": {
 			"frameX": 32,
 			"frameY": 0
-		}
+		},
+		"jumpsoutofblock": true
 	},
 	"spiny": {
 		"canStomp": false,
@@ -104,7 +107,8 @@
 				"frameY": 0
 			}
 		],
-		"deathAnimation": false
+		"deathAnimation": false,
+		"jumpsoutofblock": true
 	},
 	"poison_mushroom": {
 		"canStomp": false,
@@ -148,7 +152,8 @@
 			}
 		],
 		"deathAnimation": false,
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	},
 	"plant": {
 		"speed": 0,
@@ -168,6 +173,7 @@
 		"animationWidth": 16,
 		"animationHeight": 24,
 		"deathAnimation": false,
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	}
 }

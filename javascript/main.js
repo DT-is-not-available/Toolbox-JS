@@ -39,6 +39,11 @@ class GameLayer_Class {
 				if ((Math.round(particles[i].life) == 0) || (false)) particles.splice(i, 1)
 			}
 			
+			for (let i = 0; i < bgparticles.length; i++) {
+				bgparticles[i].game(i)
+				if ((Math.round(bgparticles[i].life) == 0) || (false)) bgparticles.splice(i, 1)
+			}
+			
 			//enemies
 			solid_hitboxes = []
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
@@ -105,6 +110,11 @@ class GameLayer_Class {
 		}		
 	}
 	game_draw() {
+		
+		//bgparticles
+		for (let i = 0; i < bgparticles.length; i++) {
+			bgparticles[i].draw(i)
+		}
 		
 		drawTileSet(level.temptiles);
 		
@@ -174,6 +184,8 @@ class GameLayer_Class {
 	}
 	edit_update() {
 		//edit menu
+		particles = []
+		bgparticles = []
 		if (keyboard_onpress.Escape && !window.location.hash) addMenu(8, 8, "edit_menu", false)
 		enemies = []
 		this.cameraspeed = 0.5
@@ -447,6 +459,7 @@ function startGame(menu_stack=[]) {
 	level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 	Mario = new Mario_Class(level.marioX,level.marioY)
 	particles = []
+	bgparticles = []
 	menus = menu_stack
 	loadEnemies()
 	camera_x = 0;
@@ -572,7 +585,12 @@ function activateTile(x, y) {
 		}
 	} else {
 		level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
-		enemies.push(new Baddie_Class(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+		if (enemy_defs[level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]].jumpsoutofblock) {
+			enemies.push(new Baddie_Class(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+			enemies[enemies.length-1].entity.yv = -25
+		} else {
+			bgparticles.push(new Enemy_block_animation(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+		}
 	}
 	hit_block = new Block_class(x, y)
 }

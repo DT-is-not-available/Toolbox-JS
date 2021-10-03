@@ -154,6 +154,27 @@
 			["button", ["EXPORT", 52, 12], 0, 48, "function", "exportLevel", []]
 		]
 	},
+	"popup_file": {
+		"type": "popup",
+		"width": 56,
+		"height": 60,
+		"padding": 8,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["FILE", 0, 0, 1]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 0, "disabled"]
+		],
+		"click_options": [
+			["button", ["NEW", 28, 12], 0, 12, "function", "newLevel", []],
+			["button", ["OPEN", 36, 12], 0, 24, "function", "openLevel", []],
+			["button", ["SAVE", 36, 12], 0, 36, "function", "saveLevel", []],
+			["button", ["EXPORT", 52, 12], 0, 48, "function", "exportLevel", []]
+		]
+	},
 	"edit_menu": {
 		"type": "popup",
 		"width": 240,
@@ -175,7 +196,7 @@
 		],
 		"click_options": [
 			["button", ["TEST", 36, 12], 0, 212, "layer", "game_test"],
-			["button", ["FILE", 36, 12], 40, 212, "menu", 96, 94, "dialouge_file", false],
+			["button", ["FILE", 36, 12], 40, 212, "menu", 56, 152, "popup_file", false],
 			["button", ["QUIT", 36, 12], 204, 212, "layer", "menu"],
 			["button", ["s", 14, 14], 226, 0, "menu", 16, 16, "level_options", true],
 			["button", [" ", 16, 16, true], 0, 12, "variable", ["buildMode"], 0],
