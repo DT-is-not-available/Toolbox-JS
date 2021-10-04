@@ -41,7 +41,6 @@ class GameLayer_Class {
 			
 			for (let i = 0; i < bgparticles.length; i++) {
 				bgparticles[i].game(i)
-				if ((Math.round(bgparticles[i].life) == 0) || (false)) bgparticles.splice(i, 1)
 			}
 			
 			//enemies

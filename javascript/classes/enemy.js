@@ -93,6 +93,9 @@ class Baddie_Class {
 				} else {
 					if (this.kills) Mario.damage()
 				}
+				if (this.destroyOnMario) {
+					this.delete = true
+				}
 			}
 		}
 	}
@@ -127,6 +130,8 @@ class Baddie_Class {
 		}
 	}
 }
+
+
 class Enemy_block_animation {
 	constructor(xpos, ypos, id) {
 		this.x = xpos

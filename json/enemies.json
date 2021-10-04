@@ -24,7 +24,9 @@
 		"solid": false,
 		"mirrors": true,
 		"turnonedge": false,
-		"blockimmune": true
+		"blockimmune": true,
+		"destroyOnMario": false,
+		"jumpsoutofblock": false
 	},
 	"goomba": {
 		"animation": [
@@ -80,11 +82,11 @@
 	"goombrat": {
 		"animation": [
 			{
-				"frameX": 0,
+				"frameX": 96,
 				"frameY": 0
 			},
 			{
-				"frameX": 16,
+				"frameX": 112,
 				"frameY": 0
 			}
 		],
@@ -112,11 +114,27 @@
 	},
 	"poison_mushroom": {
 		"canStomp": false,
+		"destroyOnMario": true,
 		"speed": 1,
 		"animation": [
 			{
 				"frameX": 224,
 				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false
+	},
+	"mushroom": {
+		"kills": false,
+		"destroyOnMario": true,
+		"canStomp": false,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 224,
+				"frameY": 0
 			}
 		],
 		"deathAnimation": false,
