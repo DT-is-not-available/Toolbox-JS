@@ -130,6 +130,25 @@ class Mario_Class {
 		} else if (this.damageframes >= 144) {
 			this.powerup = 1
 		}
+		if (this.growframes >= 0) this.growframes -= 1
+		if (this.growframes == 0) {
+			this.freezeWorld = false
+			this.frame = 2
+		}
+		if (this.growframes < 175 && !(this.growframes <= 0)) {
+			if (Math.trunc(Math.mod(this.growframes/20,3)) === 2) {
+				this.powerup = 0
+				this.frame = 0
+			} else if (Math.trunc(Math.mod(this.growframes/20,3)) === 1) {
+				this.powerup = 1
+				this.frame = -1
+			} else {
+				this.powerup = 1
+				this.frame = 0
+			}
+		} else if (this.growframes >= 175) {
+			this.powerup = 0
+		}
 	}
 	draw() {
 		if ((Math.trunc(this.iframes/8) === Math.round(this.iframes/8) || this.iframes === 0) && onscreen(this.img_hitbox, this.entity.rx, this.entity.ry)) {
@@ -158,6 +177,14 @@ class Mario_Class {
 			this.frame = 6
 		} else {
 			this.dead = true
+		}
+	}
+	grow() {
+		if (this.powerup < 1) {
+			this.growframes = 175
+			this.freezeWorld = true
+			this.powerup = 0
+			this.frame = 6
 		}
 	}
 }

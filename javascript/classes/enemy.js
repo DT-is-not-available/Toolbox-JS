@@ -92,6 +92,7 @@ class Baddie_Class {
 					}
 				} else {
 					if (this.kills) Mario.damage()
+					if (this.growsMario) Mario.grow()
 				}
 				if (this.destroyOnMario) {
 					this.delete = true

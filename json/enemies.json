@@ -26,7 +26,8 @@
 		"turnonedge": false,
 		"blockimmune": true,
 		"destroyOnMario": false,
-		"jumpsoutofblock": false
+		"jumpsoutofblock": false,
+		"growsMario": false
 	},
 	"goomba": {
 		"animation": [
@@ -139,7 +140,8 @@
 		],
 		"deathAnimation": false,
 		"mirrors": false,
-		"enemycollision": false
+		"enemycollision": false,
+		"growsMario": true
 	},
 	"bullet_bill": {
 		"animation": [

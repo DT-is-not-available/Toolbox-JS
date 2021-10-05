@@ -198,6 +198,8 @@ class GameLayer_Class {
 			Mario.entity.y = Math.round(Mario.entity.y/8)*8
 			Mario.entity.x = Math.round(Mario.entity.x/8)*8
 		}
+		Mario.damageframes = 0
+		Mario.growframes = 0
 		Mario.entity.rx = Math.round(Mario.entity.x)
 		Mario.entity.ry = Math.round(Mario.entity.y)
 		camera_x = Mario.entity.x-128
