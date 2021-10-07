@@ -39,6 +39,10 @@ class GameLayer_Class {
 				if ((Math.round(particles[i].life) == 0) || (false)) particles.splice(i, 1)
 			}
 			
+			for (let i = 0; i < bgparticles.length; i++) {
+				bgparticles[i].game(i)
+			}
+			
 			//enemies
 			solid_hitboxes = []
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
@@ -105,6 +109,11 @@ class GameLayer_Class {
 		}		
 	}
 	game_draw() {
+		
+		//bgparticles
+		for (let i = 0; i < bgparticles.length; i++) {
+			bgparticles[i].draw(i)
+		}
 		
 		drawTileSet(level.temptiles);
 		
@@ -174,6 +183,8 @@ class GameLayer_Class {
 	}
 	edit_update() {
 		//edit menu
+		particles = []
+		bgparticles = []
 		if (keyboard_onpress.Escape && !window.location.hash) addMenu(8, 8, "edit_menu", false)
 		enemies = []
 		this.cameraspeed = 0.5
@@ -187,6 +198,8 @@ class GameLayer_Class {
 			Mario.entity.y = Math.round(Mario.entity.y/8)*8
 			Mario.entity.x = Math.round(Mario.entity.x/8)*8
 		}
+		Mario.damageframes = 0
+		Mario.growframes = 0
 		Mario.entity.rx = Math.round(Mario.entity.x)
 		Mario.entity.ry = Math.round(Mario.entity.y)
 		camera_x = Mario.entity.x-128
@@ -447,6 +460,7 @@ function startGame(menu_stack=[]) {
 	level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 	Mario = new Mario_Class(level.marioX,level.marioY)
 	particles = []
+	bgparticles = []
 	menus = menu_stack
 	loadEnemies()
 	camera_x = 0;
@@ -562,17 +576,32 @@ function renderloop() {
 	if (g_layer.doGlobal) g_layer.global_draw();
 }
 
-function activateTile(x, y) {
+function activateTile(x, y, destroy) {
 //Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
 	if (!(level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 }))) {
 		if (tile_defs[level.temptiles[x+","+y]].interaction.hasCoin) {
 			particles.push(new Particle_class((x+0.5)*16, y*16, 0, -7, 32, 8, 8, 14, 0.45, 30, 4, 3))
 			Mario.coins += 1
 			level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
+		} else {
+			if (tile_defs[level.temptiles[x+","+y]].interaction.breakable && (Mario.powerup > 0 || destroy)) {
+				delete(level.temptiles[x+","+y])
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, -2, -8, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, 2, -8, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, -2, -2, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, 2, -2, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				Mario.entity.yv = 2
+				Mario.jumptimer = -1
+			}
 		}
 	} else {
 		level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
-		enemies.push(new Baddie_Class(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+		if (enemy_defs[level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]].jumpsoutofblock) {
+			enemies.push(new Baddie_Class(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+			enemies[enemies.length-1].entity.yv = -25
+		} else {
+			bgparticles.push(new Enemy_block_animation(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+		}
 	}
 	hit_block = new Block_class(x, y)
 }

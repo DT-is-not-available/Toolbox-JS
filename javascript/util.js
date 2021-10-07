@@ -1,3 +1,7 @@
+Math.mod = function(val,maxval){
+	return val-(Math.trunc(val/maxval)*maxval)
+}
+
 function resetkeys() {
 	keyboard = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
 	keyboard_Shift = false

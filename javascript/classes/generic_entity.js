@@ -156,7 +156,7 @@ class Generic_entity_class {
 				this.yv = 1
 				this.y = ypos+hitbox.Y_pos-this.hitbox.Y_pos+this.hitbox.Y_neg
 				this.onceil = true
-				if (tile_defs[level.temptiles[posToTile(xpos)+","+posToTile(ypos)]].interaction.ceiling) activateTile(posToTile(xpos), posToTile(ypos))
+				if (tile_defs[level.temptiles[posToTile(xpos)+","+posToTile(ypos)]].interaction.ceiling) activateTile(posToTile(xpos), posToTile(ypos), false)
 			}
 		} else if (tcoll.ceiling && !this.onfloor && this.yv <= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: -1, X_pos: hitbox.X_pos-1, Y_neg: -this.hitbox.Y_neg+Math.abs(this.yv), Y_pos: hitbox.Y_pos}, xpos, ypos)) {
 			this.yv = 1

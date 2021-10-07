@@ -24,7 +24,10 @@
 		"solid": false,
 		"mirrors": true,
 		"turnonedge": false,
-		"blockimmune": true
+		"blockimmune": true,
+		"destroyOnMario": false,
+		"jumpsoutofblock": false,
+		"growsMario": false
 	},
 	"goomba": {
 		"animation": [
@@ -37,7 +40,8 @@
 				"frameY": 0
 			}
 		],
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	},
 	"large_goomba": {
 		"animationWidth": 32,
@@ -57,7 +61,8 @@
 				"frameY": 56
 			}
 		],
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	},
 	"banzai_bill": {
 		"animationWidth": 32,
@@ -78,11 +83,11 @@
 	"goombrat": {
 		"animation": [
 			{
-				"frameX": 0,
+				"frameX": 96,
 				"frameY": 0
 			},
 			{
-				"frameX": 16,
+				"frameX": 112,
 				"frameY": 0
 			}
 		],
@@ -90,7 +95,8 @@
 		"deathFrame": {
 			"frameX": 32,
 			"frameY": 0
-		}
+		},
+		"jumpsoutofblock": true
 	},
 	"spiny": {
 		"canStomp": false,
@@ -104,10 +110,12 @@
 				"frameY": 0
 			}
 		],
-		"deathAnimation": false
+		"deathAnimation": false,
+		"jumpsoutofblock": true
 	},
 	"poison_mushroom": {
 		"canStomp": false,
+		"destroyOnMario": true,
 		"speed": 1,
 		"animation": [
 			{
@@ -118,6 +126,22 @@
 		"deathAnimation": false,
 		"mirrors": false,
 		"enemycollision": false
+	},
+	"mushroom": {
+		"kills": false,
+		"destroyOnMario": true,
+		"canStomp": false,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 224,
+				"frameY": 0
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false,
+		"growsMario": true
 	},
 	"bullet_bill": {
 		"animation": [
@@ -148,7 +172,8 @@
 			}
 		],
 		"deathAnimation": false,
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	},
 	"plant": {
 		"speed": 0,
@@ -168,6 +193,7 @@
 		"animationWidth": 16,
 		"animationHeight": 24,
 		"deathAnimation": false,
-		"mirrors": false
+		"mirrors": false,
+		"jumpsoutofblock": true
 	}
 }
