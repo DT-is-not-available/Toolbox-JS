@@ -576,13 +576,23 @@ function renderloop() {
 	if (g_layer.doGlobal) g_layer.global_draw();
 }
 
-function activateTile(x, y) {
+function activateTile(x, y, destroy) {
 //Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
 	if (!(level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 }))) {
 		if (tile_defs[level.temptiles[x+","+y]].interaction.hasCoin) {
 			particles.push(new Particle_class((x+0.5)*16, y*16, 0, -7, 32, 8, 8, 14, 0.45, 30, 4, 3))
 			Mario.coins += 1
 			level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
+		} else {
+			if (tile_defs[level.temptiles[x+","+y]].interaction.breakable && (Mario.powerup > 0 || destroy)) {
+				delete(level.temptiles[x+","+y])
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, -2, -8, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, 2, -8, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, -2, -2, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, 2, -2, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				Mario.entity.yv = 2
+				Mario.jumptimer = -1
+			}
 		}
 	} else {
 		level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
