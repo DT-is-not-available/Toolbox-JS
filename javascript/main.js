@@ -6,6 +6,8 @@ class GameLayer_Class {
 	game() {
 		gameLayer = "game"
 		startGame()
+		camera_x = level.marioX-128;
+		camera_y = level.marioY-120;
 	}
 	game_update() {
 		
@@ -293,15 +295,15 @@ class GameLayer_Class {
 				canvas.globalAlpha = 0.5
 				canvas.fillRect(8, 40, 240, 176)
 				canvas.globalAlpha = 1
-				if (buildMode == 0) for (let i = 1; i-1 < tile_defs.length; i++) {
-					canvas.drawImage(
+				if (buildMode == 0) for (let i = 0; i < edit_menu.tiles.length; i++) {
+					if (edit_menu.tiles[i] > -1) canvas.drawImage(
 						img_tileset,
-						tile_defs[i-1].tileX*16,
-						tile_defs[i-1].tileY*16,
+						tile_defs[edit_menu.tiles[i]].tileX*16,
+						tile_defs[edit_menu.tiles[i]].tileY*16,
 						16,
 						16,
-						8+mod(i-1,16)*16,
-						40+Math.trunc(i/16)*16,
+						8+mod(i,15)*16,
+						40+Math.trunc(i/15)*16,
 						16,
 						16
 					)
@@ -314,8 +316,8 @@ class GameLayer_Class {
 							enemy_defs[edit_menu.enemies[i]].animation[0].frameY,
 							16,
 							16,
-							8+mod(i,16)*16,
-							40+Math.trunc(i/16)*16,
+							8+mod(i,15)*16,
+							40+Math.trunc(i/15)*16,
 							16,
 							16
 						)
@@ -326,8 +328,8 @@ class GameLayer_Class {
 							0,
 							16,
 							16,
-							8+mod(i,16)*16,
-							40+Math.trunc(i/16)*16,
+							8+mod(i,15)*16,
+							40+Math.trunc(i/15)*16,
 							16,
 							16
 						)
@@ -381,6 +383,8 @@ class GameLayer_Class {
 	game_test() {
 		gameLayer = "game_test"
 		startGame()
+		camera_x = level.marioX-128;
+		camera_y = level.marioY-120;
 	}
 	game_test_update() {
 		g_layer.game_update()
@@ -451,6 +455,8 @@ function startGame(menu_stack=[]) {
 	title_yv = 2;
 	title_y = 0;
 	lost_ms = 0;
+	camera_x = 0;
+	camera_y = 0;
 	thisLoop = Date.now()
 	lastLoop = Date.now()
 	if(window.location.hash) {
@@ -463,8 +469,6 @@ function startGame(menu_stack=[]) {
 	bgparticles = []
 	menus = menu_stack
 	loadEnemies()
-	camera_x = 0;
-	camera_y = 0;
 	tileanim_timer = 0;
 	keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false} 
 	if (!loopStarted) {
@@ -519,12 +523,24 @@ function openLevel(params) {
 }
 
 function selectTile(params) {
-	if (buildMode == 0 && tile_defs[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]) {
-		tileBrush = Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16
+	if (buildMode == 0 && tile_defs[
+		edit_menu.tiles[
+			Math.trunc(
+				(
+					mouse[0]-8
+				)/16
+			)+Math.trunc(
+				(
+					mouse[1]-40
+				)/16
+			)*15
+		]
+	]) {
+		tileBrush = edit_menu.tiles[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]
 		quitMenu();
 	}
-	if (buildMode == 1 && edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]) {
-		enemyBrush = edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*16]
+	if (buildMode == 1 && edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]) {
+		enemyBrush = edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]
 		quitMenu();
 	}
 }

@@ -15,7 +15,7 @@ class Block_class {
 			if (!(typeof(level.temptiles[this.x+","+this.y]) == 'undefined')) {
 				if (debug_mode) canvas.globalAlpha = 0.5
 				canvas.fillStyle = 'rgb(92, 148, 252)';
-				canvas.fillRect(this.x*16-camera_x, this.y*16-camera_y, 16, 16);
+				canvas.fillRect(this.x*16-Math.round(camera_x), this.y*16-Math.round(camera_y), 16, 16);
 				canvas.drawImage(img_tileset, tile_defs[level.temptiles[this.x+","+this.y]].tileX*16, tile_defs[level.temptiles[this.x+","+this.y]].tileY*16, 16, 16, Math.round(this.x*16-Math.round(camera_x)), Math.round(this.y*16+(10-Math.abs(this.timer))*this.gravity-Math.round(camera_y)), 16, 16);
 				if (debug_mode) canvas.globalAlpha = 1
 			}

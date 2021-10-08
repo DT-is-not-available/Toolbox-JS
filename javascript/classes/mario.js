@@ -31,7 +31,7 @@ class Mario_Class {
 			}
 			this.entity.game()
 			if (this.entity.onfloor && !Math.round(this.entity.xv) == 0) {
-				this.walkanim = mod(this.walkanim+(this.entity.xv/150), 3)
+				this.walkanim = mod(this.walkanim+Math.abs(this.entity.xv/150), 3)
 				this.frame = 2+Math.trunc(this.walkanim)
 			}
 			if (keyboard.Space && this.jumptimer > 0) {

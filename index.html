@@ -88,10 +88,12 @@ speedslider.oninput = function() {
 	timemod = this.value/100;
 }
 	  </script>
-	  <button onclick="Mario.powerup = 0; this.blur();">SMALL MARIO</button><br>
-	  <button onclick="Mario.powerup = 1; this.blur();">BIG MARIO</button><br>
-	  <button onclick="Mario.powerup = 2; this.blur();">FIRE MARIO</button><br>
-	  <button onclick="Mario.dead = true; this.blur();">KILL MARIO</button>
+	  <p>POWERUP: </p>
+	  <button onclick="Mario.powerup += 1; this.blur();">+</button>
+	  <button onclick="Mario.powerup -= 1; this.blur();">-</button>
+	  <button onclick="Mario.powerup = 0; this.blur();">R</button><br>
+	  <button onclick="Mario.dead = true; this.blur();">KILL MARIO</button><br>
+	  <button onclick="reloadData(); this.blur();">RELOAD DATA</button>
 	</div><p></p>
 	<button type="button" class="collapsible3" onclick="this.blur();">LAYERS</button>
 	<div class="settings">

@@ -73,15 +73,22 @@ class Baddie_Class {
 				}
 			}
 			if (overlap(Mario.entity.hitbox, Mario.entity.x, Mario.entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
-				if ((Mario.entity.y < this.entity.y || Mario.entity.yv > Mario.entity.gravity)&& this.canStomp) {
+				if ((Mario.entity.y < this.entity.y-this.entity.hitbox.Y_neg+8)&& this.canStomp) {
 					Mario.entity.yv = -20
 					Mario.enemy_combo += 1
-					if (Mario.enemy_combo < 8) {
-						Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][Mario.enemy_combo]
-		//Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
-						particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][Mario.enemy_combo], [11, 12, 12, 12, 15, 16, 16, 16][Mario.enemy_combo], 8, 0, 45))
+					if (!this.pointvalue) {
+						if (Mario.enemy_combo < 8) {
+							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][Mario.enemy_combo]
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][Mario.enemy_combo], [11, 12, 12, 12, 15, 16, 16, 16][Mario.enemy_combo], 8, 0, 45))
+			//Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
+						} else {
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, 32, 16, 7, 0, 45))
+						}
 					} else {
-						particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, 32, 16, 7, 0, 45))
+						if (!(this.pointvalue == -1)) {
+							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][this.pointvalue]
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16][this.pointvalue], 8, 0, 45))
+						}
 					}
 					if (level.settings.enemy_high_jump) Mario.jumptimer = 90
 					this.dead = true
@@ -96,6 +103,39 @@ class Baddie_Class {
 				}
 				if (this.destroyOnMario) {
 					this.delete = true
+					if (this.pointvalue) {
+						if (!(this.pointvalue == -1)) {
+							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][this.pointvalue]
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16][this.pointvalue], 8, 0, 45))
+						}
+					}
+				}
+			}
+			if(overlap({X_neg:0,Y_neg:0,X_pos:16,Y_pos:16}, hit_block.x*16, hit_block.y*16-1, this.entity.hitbox, this.entity.x, this.entity.y) && hit_block.timer > 5 && this.entity.onfloor) {
+				if (this.blockimmune) {
+					this.entity.yv = -20
+					if (this.entity.x > hit_block.x*16+8) {
+						this.direction = 1
+						this.mirror = true
+					} else {
+						this.direction = -1
+						this.mirror = false
+					}
+				} else {
+					this.deathAnimation = false
+					this.flip = true
+					this.entity.yv = -15
+					this.entity.gravity = 0.5
+					this.dead = true
+					if (!this.pointvalue) {
+						Mario.score += 100
+						particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, 0, 11, 8, 0, 45))
+					} else {
+						if (!(this.pointvalue == -1)) {
+							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][this.pointvalue]
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16][this.pointvalue], 8, 0, 45))
+						}
+					}
 				}
 			}
 		}

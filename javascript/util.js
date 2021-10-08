@@ -214,3 +214,22 @@ canvas.addEventListener('mouseup', function(event) {
 });
 
 canvas.addEventListener('contextmenu', event => event.preventDefault());
+
+function reloadData(){
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			tile_defs = JSON.parse(this.responseText);
+		}
+	};
+	xhttp.open("GET", "./json/tiles.json", true);
+	xhttp.send();
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			edit_menu = JSON.parse(this.responseText);
+		}
+	};
+	xhttp.open("GET", "./json/editmenu.json", true);
+	xhttp.send();
+}
