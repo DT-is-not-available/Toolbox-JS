@@ -188,7 +188,8 @@
 		"img": [
 			["img_tileset", 0, 0, 16, 16, 0, 12],
 			["img_sprites", 0, 0, 16, 16, 20, 12],
-			["img_mario", 40, 16, 16, 16, 40, 12]
+			["img_mario", 40, 16, 16, 16, 40, 12],
+			["img_ui", 46, 0, 16, 16, 200, 12]
 		],
 		"text_shadowed": [],
 		"options": [
@@ -202,6 +203,7 @@
 			["button", [" ", 16, 16, true], 0, 12, "variable", ["editorTab"], 0],
 			["button", [" ", 16, 16, true], 20, 12, "variable", ["editorTab"], 1],
 			["button", [" ", 16, 16, true], 40, 12, "variable", ["editorTab"], 2],
+			["button", [" ", 16, 16, true], 200, 12, "variable", ["editorTab"], 10],
 			["button", [" ", 240, 176, true], 0, 32, "function", "selectTile", []]
 		]
 	},

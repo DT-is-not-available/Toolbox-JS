@@ -264,6 +264,18 @@ class GameLayer_Class {
 				level.marioY = Math.trunc((mouse[1]+camera_y+12)/8)*8
 			}
 		}
+		if (menus.length != 0 && (editorTab == 0 || editorTab == 1 || editorTab == 2)) buildMode = editorTab
+		if (menus.length == 0) editorTab = buildMode
+		if (editorTab == 10 && menus[0] && menus[0][2] == "edit_menu") {
+			menu_defs.edit_menu_temp = JSON.parse(JSON.stringify(menu_defs.edit_menu))
+			menus[0][2] = "edit_menu_temp"
+			menu_defs.edit_menu_temp.click_options.push(["button", ["TEST", 36, 12], 0, 112, "layer", "game_test"])
+			console.log("tempedit")
+		}
+		if (editorTab != 10 && menus[0] && menus[0][2] == "edit_menu_temp") {
+			menus[0][2] = "edit_menu"
+			console.log("realedit")
+		}
 	}
 	edit_draw() {
 		
@@ -289,7 +301,7 @@ class GameLayer_Class {
 		
 		//editor menu
 		this.customDrawFunc = function(id){
-			if (id == "edit_menu") {
+			if (id == "edit_menu" || id == "edit_menu_temp") {
 				canvas.fillStyle = 'rgb(255, 255, 255)';
 				canvas.fillRect(7+20*editorTab, 19, 18, 18)
 				canvas.fillStyle = 'rgb(69, 69, 69)';
@@ -351,7 +363,15 @@ class GameLayer_Class {
 						16,
 						16
 					)
-					drawText(28,44,"MARIO START POSITION")
+					drawText(32,44,"MARIO START POSITION")
+				}
+				if (editorTab == 10){
+					for (let i = 0; i < levelpack.length; i++) {
+						drawText(12,44+i*16,"W"+(1+i)+":")
+						for (let i2 = 0; i2 < levelpack[i].length; i2++) {
+							drawText(44+i2*24,44+i*16,"L"+(1+i2))
+						}
+					}
 				}
 			}
 		}
@@ -479,7 +499,7 @@ function startGame(menu_stack=[]) {
 	lastLoop = Date.now()
 	if(window.location.hash) {
 		hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-		level = JSON.parse(atob(hash)); //Parses the hash as a .lvl2 file and loads the level
+		loadLevel(atob(hash)); //Parses the hash as a .lvl2 file and loads the level
 	}
 	level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 	Mario = new Mario_Class(level.marioX,level.marioY)
@@ -490,6 +510,8 @@ function startGame(menu_stack=[]) {
 	tileanim_timer = 0;
 	keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false} 
 	if (!loopStarted) {
+		levelpack = [["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="]]
+		currentlevel = [0,0]
 		g_layer = new GameLayer_Class
 		gameLayer = "menu" //g_layer.menu();
 		fpstick = 59
