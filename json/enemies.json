@@ -178,7 +178,7 @@
 	"muncher": {
 		"speed": 0,
 		"canStomp": false,
-		"solid": false,
+		"solid": true,
 		"hitbox": {"X_neg": 8, "X_pos": 8, "Y_neg": 16, "Y_pos": 0},
 		"animation": [
 			{

@@ -17,9 +17,10 @@ class Generic_entity_class {
 		this.tilecollisiontype = "entity"
 		this.origin_entity = origin_entity
 		this.collisionfaces = {
-			horizontal: 2,
-			vertical: 2
+			horizontal: Math.ceil(this.hitbox.X_neg+this.hitbox.X_pos),
+			vertical: Math.ceil(this.hitbox.Y_neg+this.hitbox.Y_pos)
 		}
+		this.solidhitbox = -1
 	}
 	game() {
 		if (this.yv > 28) {
@@ -129,47 +130,46 @@ class Generic_entity_class {
 				}
 			}
 			for (let i = 0; i < this.collisionfaces.vertical; i++) {
-				if (typeof(level.temptiles[posToTile(this.x+this.hitbox.X_pos)+","+posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))]) != 'undefined') {
-					this.solidcollide({X_neg: 0, X_pos: 16, Y_neg: 0, Y_pos: 16}, posToTile(this.x+this.hitbox.X_pos)*16, posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))*16, tile_defs[level.tiles[posToTile(this.x+this.hitbox.X_pos)+","+posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))]].collision)
+				if (typeof(level.temptiles[posToTile(this.x+this.hitbox.X_pos)+","+posToTile(this.y+(-this.hitbox.Y_neg+i*16))]) != 'undefined') {
+					this.solidcollide({X_neg: 0, X_pos: 16, Y_neg: 0, Y_pos: 16}, posToTile(this.x+this.hitbox.X_pos)*16, posToTile(this.y+(-this.hitbox.Y_neg+i*16))*16, tile_defs[level.tiles[posToTile(this.x+this.hitbox.X_pos)+","+posToTile(this.y+(-this.hitbox.Y_neg+i*16))]].collision)
 				}
-				if (typeof(level.temptiles[posToTile(this.x-this.hitbox.X_neg)+","+posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))]) != 'undefined') {
-					this.solidcollide({X_neg: 0, X_pos: 16, Y_neg: 0, Y_pos: 16}, posToTile(this.x-this.hitbox.X_neg)*16, posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))*16, tile_defs[level.tiles[posToTile(this.x-this.hitbox.X_neg)+","+posToTile(this.y+(this.collisionfaces.vertical*-8+i*16))]].collision)
+				if (typeof(level.temptiles[posToTile(this.x-this.hitbox.X_neg)+","+posToTile(this.y+(-this.hitbox.Y_neg+i*16))]) != 'undefined') {
+					this.solidcollide({X_neg: 0, X_pos: 16, Y_neg: 0, Y_pos: 16}, posToTile(this.x-this.hitbox.X_neg)*16, posToTile(this.y+(-this.hitbox.Y_neg+i*16))*16, tile_defs[level.tiles[posToTile(this.x-this.hitbox.X_neg)+","+posToTile(this.y+(-this.hitbox.Y_neg+i*16))]].collision)
 				}
-			}
-			for (let i = 0; i < solid_hitboxes.length; i++) {
-				this.solidcollide(solid_hitboxes[i][0], solid_hitboxes[i][1], solid_hitboxes[i][2])
 			}
 		}
 		if (this.yv < 0) this.yv += this.up_gravity
 		this.yv += this.gravity
 		this.rx = Math.round(this.x)
 		this.ry = Math.round(this.y)
+		for (let i = 0; i < solid_hitboxes.length; i++) {
+			if (i != this.solidhitbox) this.solidcollide(solid_hitboxes[i][0], solid_hitboxes[i][1], solid_hitboxes[i][2])
+		}
 	}
 	solidcollide(hitbox, xpos, ypos, tcoll={floor: true, ceiling: true, left: true, right: true}) {
-		if (tcoll.floor && this.yv >= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: -1, X_pos: hitbox.X_pos-1, Y_neg: 0, Y_pos: -this.hitbox.Y_neg+Math.abs(this.yv/16)+0.01}, xpos, ypos)) {
-			this.yv = 0
-			this.y = ypos-this.hitbox.Y_pos
+		if (tcoll.floor && this.yv >= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: hitbox.X_neg-2, X_pos: hitbox.X_pos-2, Y_neg: hitbox.Y_neg, Y_pos: -hitbox.Y_neg}, xpos, ypos)) {
+			this.yv = 0.5
+			this.y = ypos-hitbox.Y_neg-this.hitbox.Y_pos
 			this.onfloor = true
 		}
-		if (this.origin_entity == Mario) {
-			if (tcoll.ceiling && !this.onfloor && this.yv <= 0 && overlap({X_neg: 0, X_pos: 0, Y_neg: this.hitbox.Y_neg, Y_pos: this.hitbox.Y_pos}, this.x, this.y, {X_neg: 0, X_pos: hitbox.X_pos, Y_neg: -this.hitbox.Y_neg+Math.abs(this.yv/16)+0.01, Y_pos: hitbox.Y_pos}, xpos, ypos)) {
-				this.yv = 1
-				this.y = ypos+hitbox.Y_pos-this.hitbox.Y_pos+this.hitbox.Y_neg
-				this.onceil = true
-				if (tile_defs[level.temptiles[posToTile(xpos)+","+posToTile(ypos)]].interaction.ceiling) activateTile(posToTile(xpos), posToTile(ypos), false)
-			}
-		} else if (tcoll.ceiling && !this.onfloor && this.yv <= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: -1, X_pos: hitbox.X_pos-1, Y_neg: -this.hitbox.Y_neg+Math.abs(this.yv), Y_pos: hitbox.Y_pos}, xpos, ypos)) {
+		if (this.origin_entity == Mario) if (tcoll.ceiling && this.yv <= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: hitbox.X_neg-6, X_pos: hitbox.X_pos-6, Y_neg: -hitbox.Y_pos, Y_pos: hitbox.Y_pos}, xpos, ypos)) {
 			this.yv = 1
-			this.y = ypos+hitbox.Y_pos-this.hitbox.Y_pos+this.hitbox.Y_neg
+			this.y = ypos+hitbox.Y_pos+this.hitbox.Y_neg
+			this.onceil = true
+			if (tile_defs[level.temptiles[posToTile(xpos)+","+posToTile(ypos)]].interaction.ceiling) activateTile(posToTile(xpos), posToTile(ypos), false)
+		}
+		if (this.origin_entity != Mario) if (tcoll.ceiling && this.yv <= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: hitbox.X_neg-2, X_pos: hitbox.X_pos-2, Y_neg: -hitbox.Y_pos, Y_pos: hitbox.Y_pos}, xpos, ypos)) {
+			this.yv = 1
+			this.y = ypos+hitbox.Y_pos+this.hitbox.Y_neg
 			this.onceil = true
 		}
-		if (tcoll.left && this.xv >= 0 && this.x < xpos+hitbox.X_pos/2 && overlap(this.hitbox, this.x, this.y, {X_neg: 0+hitbox.X_pos/2, X_pos: hitbox.X_pos, Y_neg: -2, Y_pos: hitbox.Y_pos-2}, xpos, ypos)) {
-			this.x = xpos-this.hitbox.X_neg
+		if (tcoll.left && this.xv >= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: hitbox.X_neg, X_pos: -hitbox.X_neg, Y_neg: hitbox.Y_neg-2, Y_pos: hitbox.Y_pos-2}, xpos, ypos)) {
+			this.x = xpos-hitbox.X_neg-this.hitbox.X_pos
 			this.xv = 0
 			this.onright = true
 		}
-		if (tcoll.right && this.xv <= 0 && this.x > xpos+hitbox.X_pos/2 && overlap(this.hitbox, this.x, this.y, {X_neg: 0-hitbox.X_pos/2, X_pos: hitbox.X_pos, Y_neg: -2, Y_pos: hitbox.Y_pos-2}, xpos, ypos)) {
-			this.x = xpos+this.hitbox.X_pos+hitbox.X_pos
+		if (tcoll.right && this.xv <= 0 && overlap(this.hitbox, this.x, this.y, {X_neg: -hitbox.X_pos, X_pos: hitbox.X_pos, Y_neg: hitbox.Y_neg-2, Y_pos: hitbox.Y_pos-2}, xpos, ypos)) {
+			this.x = xpos+hitbox.X_pos+this.hitbox.X_neg
 			this.xv = 0
 			this.onleft = true
 		}

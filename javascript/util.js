@@ -146,7 +146,10 @@ document.addEventListener('keydown', function(event) {
         //console.log('Escape was pressed');
 		if (!keyboard.Escape) keyboard_onpress.Escape = true
 		keyboard.Escape = true
-    }
+    } else {
+		if (!keyboard["key_"+event.key]) keyboard_onpress["key_"+event.key] = true
+		keyboard["key_"+event.key] = true
+	}
 });
 
 document.addEventListener('keyup', function(event) {
@@ -190,7 +193,10 @@ document.addEventListener('keyup', function(event) {
         //console.log('Escape was released');
 		keyboard.Escape = false
 		keyboard_onpress.Escape = false
-    }
+    } else {
+		keyboard["key_"+event.key] = false
+		keyboard_onpress["key_"+event.key] = false
+	}
 });
 
 //mouse coordinates

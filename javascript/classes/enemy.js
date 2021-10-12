@@ -58,7 +58,7 @@ class Baddie_Class {
 				this.mirror = false
 			}
 			for (let i = 0; i < enemies.length; i++) {
-				if (!(enemies[i] == this) && !enemies[i].dead && enemies[i].enemycollision && this.enemycollision && overlap(enemies[i].entity.hitbox, enemies[i].entity.x, enemies[i].entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
+				if (!(enemies[i] == this) && !enemies[i].dead && enemies[i].enemycollision && enemies[i].entity.solidhitbox == -1 && this.entity.solidhitbox == -1 && this.enemycollision && overlap(enemies[i].entity.hitbox, enemies[i].entity.x, enemies[i].entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
 					if (this.entity.x > enemies[i].entity.x) {
 						this.direction = 1
 						this.mirror = true

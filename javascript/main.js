@@ -48,16 +48,19 @@ class GameLayer_Class {
 			//enemies
 			solid_hitboxes = []
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
-				if (enemies[i].solid) solid_hitboxes.push([
-					{
-						X_neg: 0,
-						X_pos: enemies[i].entity.hitbox.X_pos+enemies[i].entity.hitbox.X_neg-2,
-						Y_neg: 0,
-						Y_pos: enemies[i].entity.hitbox.Y_pos+enemies[i].entity.hitbox.Y_neg-2
-					}, 
-					enemies[i].entity.x-enemies[i].entity.hitbox.X_neg+1, 
-					enemies[i].entity.y-enemies[i].entity.hitbox.Y_neg+1
-				])
+				if (enemies[i].solid) {
+					solid_hitboxes.push([
+						{
+							X_neg:enemies[i].entity.hitbox.X_neg-1,
+							X_pos:enemies[i].entity.hitbox.X_pos-1,
+							Y_neg:enemies[i].entity.hitbox.Y_neg-1,
+							Y_pos:enemies[i].entity.hitbox.Y_pos-1
+						}, 
+						enemies[i].entity.x, 
+						enemies[i].entity.y
+					])
+					enemies[i].entity.solidhitbox = solid_hitboxes.length-1
+				}
 			}
 			
 			if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
@@ -284,18 +287,19 @@ class GameLayer_Class {
 			canvas.globalAlpha = 1
 		}
 		
+		//editor menu
 		this.customDrawFunc = function(id){
 			if (id == "edit_menu") {
 				canvas.fillStyle = 'rgb(255, 255, 255)';
-				canvas.fillRect(7+20*buildMode, 19, 18, 18)
+				canvas.fillRect(7+20*editorTab, 19, 18, 18)
 				canvas.fillStyle = 'rgb(69, 69, 69)';
-				canvas.fillRect(8+20*buildMode, 20, 16, 16)
+				canvas.fillRect(8+20*editorTab, 20, 16, 16)
 				
 				canvas.fillStyle = 'rgb(0, 0, 0)';
 				canvas.globalAlpha = 0.5
 				canvas.fillRect(8, 40, 240, 176)
 				canvas.globalAlpha = 1
-				if (buildMode == 0) for (let i = 0; i < edit_menu.tiles.length; i++) {
+				if (editorTab == 0) for (let i = 0; i < edit_menu.tiles.length; i++) {
 					if (edit_menu.tiles[i] > -1) canvas.drawImage(
 						img_tileset,
 						tile_defs[edit_menu.tiles[i]].tileX*16,
@@ -308,7 +312,7 @@ class GameLayer_Class {
 						16
 					)
 				}
-				if (buildMode == 1) for (let i = 0; i < edit_menu.enemies.length; i++) {
+				if (editorTab == 1) for (let i = 0; i < edit_menu.enemies.length; i++) {
 					if (typeof(enemy_defs[edit_menu.enemies[i]]) != 'undefined' && typeof(enemy_defs[edit_menu.enemies[i]].animation) != 'undefined') {
 						canvas.drawImage(
 							img_sprites, 
@@ -334,6 +338,20 @@ class GameLayer_Class {
 							16
 						)
 					}
+				}
+				if (editorTab == 2){
+					canvas.drawImage(
+						img_mario, 
+						232,
+						16,
+						16,
+						16,
+						8,
+						40,
+						16,
+						16
+					)
+					drawText(28,44,"MARIO START POSITION")
 				}
 			}
 		}
@@ -483,6 +501,7 @@ function startGame(menu_stack=[]) {
 		fpsloop();
 		console.log("Game Starting")
 		buildMode = 0
+		editorTab = 0
 	}
 	console.log("\""+gameLayer+"\" Layer Starting")
 	loopStarted = true
@@ -523,7 +542,7 @@ function openLevel(params) {
 }
 
 function selectTile(params) {
-	if (buildMode == 0 && tile_defs[
+	if (editorTab == 0 && tile_defs[
 		edit_menu.tiles[
 			Math.trunc(
 				(
@@ -537,10 +556,16 @@ function selectTile(params) {
 		]
 	]) {
 		tileBrush = edit_menu.tiles[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]
+		buildMode = 0
 		quitMenu();
 	}
-	if (buildMode == 1 && edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]) {
+	if (editorTab == 1 && edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]) {
 		enemyBrush = edit_menu.enemies[Math.trunc((mouse[0]-8)/16)+Math.trunc((mouse[1]-40)/16)*15]
+		buildMode = 1
+		quitMenu();
+	}
+	if (editorTab == 2) {
+		buildMode = 2
 		quitMenu();
 	}
 }
