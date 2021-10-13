@@ -156,7 +156,7 @@
 	},
 	"popup_file": {
 		"type": "popup",
-		"width": 56,
+		"width": 72,
 		"height": 60,
 		"padding": 8,
 		"pauses": false,
@@ -169,9 +169,9 @@
 			[0, 0, "disabled"]
 		],
 		"click_options": [
-			["button", ["NEW", 28, 12], 0, 12, "function", "newLevel", []],
-			["button", ["OPEN", 36, 12], 0, 24, "function", "openLevel", []],
-			["button", ["SAVE", 36, 12], 0, 36, "function", "saveLevel", []],
+			["button", ["CLEAR", 44, 12], 0, 12, "function", "newLevel", []],
+			["button", ["IMPORT", 52, 12], 0, 24, "function", "openLevel", []],
+			["button", ["DOWNLOAD", 68, 12], 0, 36, "function", "saveLevel", []],
 			["button", ["EXPORT", 52, 12], 0, 48, "function", "exportLevel", []]
 		]
 	},
@@ -188,8 +188,7 @@
 		"img": [
 			["img_tileset", 0, 0, 16, 16, 0, 12],
 			["img_sprites", 0, 0, 16, 16, 20, 12],
-			["img_mario", 40, 16, 16, 16, 40, 12],
-			["img_ui", 46, 0, 16, 16, 200, 12]
+			["img_mario", 40, 16, 16, 16, 40, 12]
 		],
 		"text_shadowed": [],
 		"options": [
@@ -203,7 +202,7 @@
 			["button", [" ", 16, 16, true], 0, 12, "variable", ["editorTab"], 0],
 			["button", [" ", 16, 16, true], 20, 12, "variable", ["editorTab"], 1],
 			["button", [" ", 16, 16, true], 40, 12, "variable", ["editorTab"], 2],
-			["button", [" ", 16, 16, true], 200, 12, "variable", ["editorTab"], 10],
+			["button", ["W", 14, 14], 201, 13, "variable", ["editorTab"], 10],
 			["button", [" ", 240, 176, true], 0, 32, "function", "selectTile", []]
 		]
 	},

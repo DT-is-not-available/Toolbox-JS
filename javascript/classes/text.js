@@ -149,7 +149,7 @@ function handleMenu(id, xpos=0, ypos=0) {
 				handleMenuAction(menu_defs[id].click_options[i], 4)
 			}
 		}
-		if (mouseButtons[0] && !overlap({X_neg: 0, X_pos: 0, Y_neg: 0, Y_pos: 0}, mouse[0], mouse[1], {X_neg: 0, X_pos: menu_defs[id].width, Y_neg: 0, Y_pos: menu_defs[id].height}, xpos, ypos) && menu_defs[id].esc_close) {
+		if (mouseButtons[0] && !overlap({X_neg: 0, X_pos: 0, Y_neg: 0, Y_pos: 0}, mouse[0], mouse[1], {X_neg: menu_defs[id].padding, X_pos: menu_defs[id].width+menu_defs[id].padding, Y_neg: menu_defs[id].padding, Y_pos: menu_defs[id].height+menu_defs[id].padding}, xpos, ypos) && menu_defs[id].esc_close) {
 			quitMenu()
 		}
 	}

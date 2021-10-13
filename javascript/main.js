@@ -150,7 +150,7 @@ class GameLayer_Class {
 		
 		if (!debug_mode) {
 			drawText(0, 8, "   MARIO          WORLD  TIME")
-			drawText(0, 16, "   "+Mario.score.toString().padStart(6,'0').padEnd(8,' ')+" x"+Mario.coins.toString().padStart(2,'0')+"    1-1  "+Math.trunc(Math.abs(world_timer)).toString().padStart(3,'0').padStart(5,' '))
+			drawText(0, 16, "   "+Mario.score.toString().padStart(6,'0').padEnd(8,' ')+" x"+Mario.coins.toString().padStart(2,'0')+"   "+((currentlevel[0]+1)+"").padStart(2," ")+"-"+(currentlevel[1]+1)+"  "+Math.trunc(Math.abs(world_timer)).toString().padStart(3,'0').padStart(5,' '))
 			canvas.drawImage(img_text, [136, 136, 136, 136+8, 136+16, 136+8][mod(Math.round(tileanim_timer), 6)], 8, 8, 8, 88, 16, 8, 8)
 		}
 		
@@ -188,6 +188,11 @@ class GameLayer_Class {
 	}
 	edit_update() {
 		//edit menu
+		if (keyboard_onpress.key_Tab && buildMode < 2) editorTab = buildMode = 1-buildMode
+		if (keyboard_onpress.key_Tab && buildMode >= 2) editorTab = buildMode = 0
+		if (keyboard_onpress.key_1) buildMode = 0
+		if (keyboard_onpress.key_2) buildMode = 1
+		if (keyboard_onpress.key_3) buildMode = 2
 		particles = []
 		bgparticles = []
 		if (keyboard_onpress.Escape && !window.location.hash) addMenu(8, 8, "edit_menu", false)
@@ -203,6 +208,7 @@ class GameLayer_Class {
 			Mario.entity.y = Math.round(Mario.entity.y/8)*8
 			Mario.entity.x = Math.round(Mario.entity.x/8)*8
 		}
+		if (menus.length == 0) deletingLevels = false
 		Mario.damageframes = 0
 		Mario.growframes = 0
 		Mario.entity.rx = Math.round(Mario.entity.x)
@@ -267,14 +273,11 @@ class GameLayer_Class {
 		if (menus.length != 0 && (editorTab == 0 || editorTab == 1 || editorTab == 2)) buildMode = editorTab
 		if (menus.length == 0) editorTab = buildMode
 		if (editorTab == 10 && menus[0] && menus[0][2] == "edit_menu") {
-			menu_defs.edit_menu_temp = JSON.parse(JSON.stringify(menu_defs.edit_menu))
-			menus[0][2] = "edit_menu_temp"
-			menu_defs.edit_menu_temp.click_options.push(["button", ["TEST", 36, 12], 0, 112, "layer", "game_test"])
-			console.log("tempedit")
+			loadTempEditmenu()
 		}
 		if (editorTab != 10 && menus[0] && menus[0][2] == "edit_menu_temp") {
 			menus[0][2] = "edit_menu"
-			console.log("realedit")
+			deletingLevels = false
 		}
 	}
 	edit_draw() {
@@ -353,9 +356,9 @@ class GameLayer_Class {
 				}
 				if (editorTab == 2){
 					canvas.drawImage(
-						img_mario, 
-						232,
-						16,
+						img_ui, 
+						0,
+						0,
 						16,
 						16,
 						8,
@@ -367,9 +370,9 @@ class GameLayer_Class {
 				}
 				if (editorTab == 10){
 					for (let i = 0; i < levelpack.length; i++) {
-						drawText(12,44+i*16,"W"+(1+i)+":")
+						drawText(12,44+i*16,"W"+(""+(1+i)).padStart(2,"0"))
 						for (let i2 = 0; i2 < levelpack[i].length; i2++) {
-							drawText(44+i2*24,44+i*16,"L"+(1+i2))
+							drawText(44+i2*24-1,44+i*16,(""+(1+i2)).padStart(1,"0"))
 						}
 					}
 				}
@@ -484,6 +487,7 @@ class GameLayer_Class {
 
 function startGame(menu_stack=[]) {
 	temp = 0
+	deletingLevels = false
 	solid_hitboxes = []
 	hit_block = new Block_class(0, 0, 0, -999)
 	world_timer = level.settings.timer
@@ -529,6 +533,52 @@ function startGame(menu_stack=[]) {
 	loopStarted = true
 }
 
+function loadTempEditmenu() {
+	mouseButtons = [false, false, false]
+	mouseButtons_onpress = [false, false, false]
+	menu_defs.edit_menu_temp = JSON.parse(JSON.stringify(menu_defs.edit_menu))
+	menus[0][2] = "edit_menu_temp" 
+	if (levelpack.length < 11) menu_defs.edit_menu_temp.click_options.push(["button", ["+WORLD", 56, 12], 0, 32+levelpack.length*16, "function", "addWorld", []])
+	for (let i = 0; i < levelpack.length; i++) {
+		for (let i2 = 0; i2 < levelpack[i].length; i2++) {
+			if (i != currentlevel[0] || i2 != currentlevel[1]) menu_defs.edit_menu_temp.click_options.push(["button", [(""+(1+i2)).padStart(1,"0"), 22, 14], 32+i2*24, 33+i*16, "function", "packLoadLevel", [i,i2]])
+		}
+		if (levelpack[i].length < 8) menu_defs.edit_menu_temp.click_options.push(["button", ["+", 14, 14], 32+levelpack[i].length*24, 33+i*16, "function", "addLevel", [i]])
+		if (levelpack.length > 1 || levelpack[i].length > 1) menu_defs.edit_menu_temp.click_options.push(["button", ["-", 14, 14], 32+((levelpack[i].length < 8)*16)+levelpack[i].length*24, 33+i*16, "function", "delLevel", [i]])
+	}
+}
+
+function addWorld(params) {
+	levelpack.push(["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="])
+	loadTempEditmenu()
+}
+
+function addLevel(params) {
+	levelpack[params[0]].push(["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="])
+	loadTempEditmenu()
+}
+
+function delLevel(params) {
+	levelpack[params[0]].splice(levelpack[params[0]].length-1, 1)
+	if (levelpack[params[0]].length == 0) {
+		levelpack.splice(params[0], 1)
+		if (currentlevel[0] == params[0]) {
+			loadLevel(atob(levelpack[0][0]))
+			currentlevel = [0,0]
+			Mario.entity.x = level.marioX
+			Mario.entity.y = level.marioY
+		}
+	} else {
+		if (currentlevel[0] == params[0] && currentlevel[1] == levelpack[params[0]].length) {
+			loadLevel(atob(levelpack[currentlevel[0]][currentlevel[1]-1]))
+			currentlevel = [currentlevel[0], currentlevel[1]-1]
+			Mario.entity.x = level.marioX
+			Mario.entity.y = level.marioY
+		}
+	}
+	loadTempEditmenu()
+}
+
 function addMenu(x, y, id, cursor=true) {
 	keyboard = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
 	keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
@@ -546,6 +596,16 @@ function saveLevel(params) {
 	download_file('level.lvl2', btoa(JSON.stringify(level)))
 	addMenu(64, 92, "dialouge_save", false)
 }
+
+function packLoadLevel(params) {
+	levelpack[currentlevel[0]][currentlevel[1]] = btoa(JSON.stringify(level))
+	loadLevel(atob(levelpack[params[0]][params[1]]))
+	currentlevel = params
+	Mario.entity.x = level.marioX
+	Mario.entity.y = level.marioY
+	loadTempEditmenu()
+}
+
 function exportLevel(params) {
 	quitMenu()
 	window.open('https://gdengine.github.io/Toolbox-JS/#'+btoa(JSON.stringify(level)))

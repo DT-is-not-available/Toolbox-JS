@@ -103,6 +103,10 @@ function loadLevel(levelstring) {
 
 //input
 
+document.addEventListener('wheel', function(event) {
+	event.preventDefault()
+});
+
 //keyboard
 
 document.addEventListener('keydown', function(event) {
@@ -149,6 +153,7 @@ document.addEventListener('keydown', function(event) {
     } else {
 		if (!keyboard["key_"+event.key]) keyboard_onpress["key_"+event.key] = true
 		keyboard["key_"+event.key] = true
+		if (keyboard.key_Tab) event.preventDefault()
 	}
 });
 
