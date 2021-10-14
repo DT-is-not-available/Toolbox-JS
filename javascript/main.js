@@ -193,6 +193,7 @@ class GameLayer_Class {
 		if (keyboard_onpress.key_1) buildMode = 0
 		if (keyboard_onpress.key_2) buildMode = 1
 		if (keyboard_onpress.key_3) buildMode = 2
+		if (keyboard_onpress.key_4) buildMode = 3
 		particles = []
 		bgparticles = []
 		if (keyboard_onpress.Escape && !window.location.hash) addMenu(8, 8, "edit_menu", false)
