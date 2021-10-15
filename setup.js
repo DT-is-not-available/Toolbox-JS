@@ -37,6 +37,44 @@ window.addEventListener('resize', setScaleAuto)
 var filesLoaded = 0;
 var filesNeeded = 18;
 
+//music
+const mus = {
+	smb: {
+		overworld: new Audio('music/smb/overworld.ogg')
+	},
+	title: new Audio('music/toolbox.ogg'),
+	edit: new Audio('music/edit.ogg')
+}
+
+//sounds
+const sfx = {
+	smb: {
+		"1up": new Audio('sounds/smb/1up.ogg'),
+		bounce: new Audio('sounds/smb/bounce.ogg'),
+		blockbreak: new Audio('sounds/smb/blockbreak.ogg'),
+		bump: new Audio('sounds/smb/bump.ogg'),
+		coin: new Audio('sounds/smb/coin.ogg'),
+		damage: new Audio('sounds/smb/pipe.ogg'),
+		fireball: new Audio('sounds/smb/fireball.ogg'),
+		fireworks: new Audio('sounds/smb/fireworks.ogg'),
+		flagpole: new Audio('sounds/smb/flagpole.ogg'),
+		jump_small: new Audio('sounds/smb/jump_small.ogg'),
+		jump_super: new Audio('sounds/smb/jump_super.ogg'),
+		kick: new Audio('sounds/smb/kick.ogg'),
+		levelend: new Audio('sounds/smb/levelend.ogg'),
+		lowtime: new Audio('sounds/smb/lowtime.ogg'),
+		mariodie: new Audio('sounds/smb/mariodie.ogg'),
+		pause: new Audio('sounds/smb/pause.ogg'),
+		pipe: new Audio('sounds/smb/pipe.ogg'),
+		powerup: new Audio('sounds/smb/powerup.ogg'),
+		powerup_appears: new Audio('sounds/smb/powerup_appears.ogg'),
+		spin: new Audio('sounds/smb/spin.ogg'),
+		stomp: new Audio('sounds/smb/stomp.ogg'),
+		twirl: new Audio('sounds/smb/twirl.ogg'),
+		vine: new Audio('sounds/smb/vine.ogg')
+	}
+}
+
 var xhttp = new XMLHttpRequest();
 // new file
 xhttp.onreadystatechange = function() {

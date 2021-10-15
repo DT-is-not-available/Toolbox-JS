@@ -2,6 +2,19 @@ Math.mod = function(val,maxval){
 	return val-(Math.trunc(val/maxval)*maxval)
 }
 
+Audio.prototype.stop = function(){
+	this.pause()
+	this.currentTime = 0
+}
+
+function playSound(sound, vol=1) {
+	if(typeof(sfx.smb[sound])!='undefined'){
+		sfx.smb[sound].volume = vol/2
+		sfx.smb[sound].currentTime = 0
+		sfx.smb[sound].play()
+	}
+}
+
 function resetkeys() {
 	keyboard = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
 	keyboard_Shift = false
@@ -90,7 +103,9 @@ function readLevel(file) {
   const reader = new FileReader();
   reader.addEventListener('load', (event) => {
     loadLevel(atob(event.target.result))
-	g_layer.edit()
+	Mario.entity.x = level.marioX
+	Mario.entity.y = level.marioY
+	quitMenu()
   });
   reader.readAsText(file);
 }

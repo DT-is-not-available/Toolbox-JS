@@ -74,6 +74,7 @@ class Baddie_Class {
 			}
 			if (overlap(Mario.entity.hitbox, Mario.entity.x, Mario.entity.y, this.entity.hitbox, this.entity.x, this.entity.y)) {
 				if ((Mario.entity.y < this.entity.y-this.entity.hitbox.Y_neg+8)&& this.canStomp) {
+					playSound("stomp")
 					Mario.entity.yv = -20
 					Mario.enemy_combo += 1
 					if (!this.pointvalue) {
@@ -83,11 +84,13 @@ class Baddie_Class {
 			//Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
 						} else {
 							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, 32, 16, 7, 0, 45))
+							playSound("1up")
 						}
 					} else {
 						if (!(this.pointvalue == -1)) {
-							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][this.pointvalue]
-							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16][this.pointvalue], 8, 0, 45))
+							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000, 0][this.pointvalue]
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24, 32][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16, 16][this.pointvalue], 8, 0, 45))
+							if (this.pointvalue == 8) playSound("1up")
 						}
 					}
 					if (level.settings.enemy_high_jump) Mario.jumptimer = 90
@@ -105,8 +108,9 @@ class Baddie_Class {
 					this.delete = true
 					if (this.pointvalue) {
 						if (!(this.pointvalue == -1)) {
-							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000][this.pointvalue]
-							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16][this.pointvalue], 8, 0, 45))
+							Mario.score += [100, 200, 400, 800, 1000, 2000, 4000, 8000, 0][this.pointvalue]
+							particles.push(new Particle_class(this.entity.x, this.entity.y-8, 0, -1, 0, [0, 8, 16, 24, 0, 8, 16, 24, 32][this.pointvalue], [11, 12, 12, 12, 15, 16, 16, 16, 16][this.pointvalue], 8, 0, 45))
+							if (this.pointvalue == 8) playSound("1up")
 						}
 					}
 				}
@@ -151,13 +155,15 @@ class Baddie_Class {
 			this.frameY = this.animation[mod(Math.trunc(this.animationTimer), this.animation.length)].frameY
 		}
 		if (onscreen(this.img_hitbox, this.entity.rx, this.entity.ry)) {
+			let spritesheet = img_sprites
+			if (gameLayer === "edit") spritesheet = img_sprites_select
 			this.flipvalue = 1
 			this.mirrorvalue = 1
 			if (this.flip) this.flipvalue = -1
 			if (this.mirror && this.mirrors) this.mirrorvalue = -1
 			canvas.scale(this.mirrorvalue, this.flipvalue);
 			canvas.drawImage(
-				img_sprites,
+				spritesheet,
 				this.frameX,
 				this.frameY,
 				(this.img_hitbox.X_neg+this.img_hitbox.X_pos),
@@ -178,9 +184,11 @@ class Enemy_block_animation {
 		this.x = xpos
 		this.y = ypos
 		this.id = id
+		playSound("powerup_appears")
 		this.emergetimer = 0
 		this.frameX = enemy_defs[id].animation[0].frameX
 		this.frameY = enemy_defs[id].animation[0].frameY
+		this.mirrors = (typeof(enemy_defs[id].mirrors)=='undefined')
 		this.animationWidth = (function(){if(typeof(enemy_defs[id].animationWidth) == "undefined"){return enemy_defs.inherit.animationWidth}else{return enemy_defs[id].animationWidth}})()
 		this.animationHeight = (function(){if(typeof(enemy_defs[id].animationWidth) == "undefined"){return enemy_defs.inherit.animationHeight}else{return enemy_defs[id].animationHeight}})()
 		this.img_hitbox = {X_neg: this.animationWidth/2, X_pos: this.animationWidth/2, Y_neg: this.animationHeight, Y_pos: 0}
@@ -189,8 +197,12 @@ class Enemy_block_animation {
 	}
 	game(id) {
 		this.emergetimer += 0.125
+		this.mirrorvalue = 1
+		if (Mario.entity.x < this.x+8 && this.mirrors) this.mirrorvalue = -1
 		if (Math.trunc(this.emergetimer) >= this.animationHeight) {
 			enemies.push(new Baddie_Class(this.x, this.y, this.id))
+			if (Mario.entity.x < this.x+8) enemies[enemies.length-1].direction = 1
+			if (Mario.entity.x < this.x+8) enemies[enemies.length-1].mirror = true
 			bgparticles.splice(id,1)
 		}
 	}

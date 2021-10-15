@@ -24,6 +24,10 @@ class Mario_Class {
 	}
 	game() {
 		if (!this.freezeWorld) {
+			if (this.coins > 99) {
+				this.coins -= 100
+				playSound("1up")
+			}
 			if (this.powerup == 0) {
 				this.entity.hitbox = {X_neg: 6, X_pos: 6, Y_neg: 14, Y_pos: 0}
 			} else {
@@ -35,6 +39,8 @@ class Mario_Class {
 				this.frame = 2+Math.trunc(this.walkanim)
 			}
 			if (keyboard.Space && this.jumptimer > 0) {
+				if (this.entity.onfloor && this.powerup == 0) playSound("jump_small")
+				if (this.entity.onfloor && this.powerup != 0) playSound("jump_super")
 				if (this.jumptimer > 0) {this.entity.yv = -4}
 				if (this.jumptimer > 15) {this.entity.yv = -12}
 				if (this.jumptimer > 30) {this.entity.yv = -20}
@@ -104,6 +110,7 @@ class Mario_Class {
 			}
 		} 
 		if (this.dead) {
+			if (this.deathtimer == 0) playSound("mariodie")
 			this.freezeWorld = true
 			this.frame = 1
 			this.powerup = 0
@@ -175,6 +182,7 @@ class Mario_Class {
 			this.freezeWorld = true
 			this.powerup = 0
 			this.frame = 6
+			playSound("damage")
 		} else {
 			this.dead = true
 		}
@@ -186,5 +194,6 @@ class Mario_Class {
 			this.powerup = 0
 			this.frame = 6
 		}
+		playSound("powerup")
 	}
 }

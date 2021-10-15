@@ -6,12 +6,14 @@ class GameLayer_Class {
 	game() {
 		gameLayer = "game"
 		startGame()
+		mus_current = mus.smb.overworld
 		camera_x = level.marioX-128;
 		camera_y = level.marioY-120;
 	}
 	game_update() {
 		
 		//pause menu
+		if (keyboard_onpress.Escape && gameLayer == "game") playSound("pause")
 		if (keyboard_onpress.Escape && !window.location.hash && gameLayer == "game") addMenu(64, 92, "pause")
 		if (keyboard_onpress.Escape && window.location.hash && gameLayer == "game") addMenu(64, 92, "locked_pause")
 		
@@ -125,9 +127,11 @@ class GameLayer_Class {
 		//enemies
 		if (!enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
 			enemies[i].draw();
-			if (debug_mode) canvas.globalAlpha = 0.5
-			if (debug_mode) enemies[i].entity.draw();
-			if (debug_mode) canvas.globalAlpha = 1
+		}
+		if (debug_mode && !enemies.length == 0) for (let i = 0; i < enemies.length; i++) {
+			canvas.globalAlpha = 0.5
+			enemies[i].entity.draw();
+			canvas.globalAlpha = 1
 		}
 		
 		//hit block
@@ -157,7 +161,9 @@ class GameLayer_Class {
 	}
 	menu() {
 		gameLayer = "menu"
+		packLoadLevel([0,0])
 		startGame()
+		mus_current = mus.title
 	}
 	menu_update() {
 		tileanim_timer += 0.03
@@ -185,6 +191,8 @@ class GameLayer_Class {
 	edit() {
 		gameLayer = "edit"
 		startGame()
+		mus_current = mus.edit
+		enemies = []
 	}
 	edit_update() {
 		//edit menu
@@ -193,11 +201,10 @@ class GameLayer_Class {
 		if (keyboard_onpress.key_1) buildMode = 0
 		if (keyboard_onpress.key_2) buildMode = 1
 		if (keyboard_onpress.key_3) buildMode = 2
-		if (keyboard_onpress.key_4) buildMode = 3
+		//if (keyboard_onpress.key_4) buildMode = 3
 		particles = []
 		bgparticles = []
 		if (keyboard_onpress.Escape && !window.location.hash) addMenu(8, 8, "edit_menu", false)
-		enemies = []
 		this.cameraspeed = 0.5
 		if (keyboard.Shift) this.cameraspeed += 1.5
 		if (keyboard.Space) this.cameraspeed += 3
@@ -235,6 +242,8 @@ class GameLayer_Class {
 		world_timer = level.settings.timer
 		Mario.dead = false
 		if (keyboard_onpress.Enter) {
+			if(typeof(mus_current)!='undefined') mus_current.stop()
+			mus_current = mus.smb.overworld
 			gameLayer = "game_test"
 			level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 			Mario.iframes = 240
@@ -243,6 +252,7 @@ class GameLayer_Class {
 		tileanim_timer += 0.03
 		
 		//building
+		if (buildMode != 1) enemySelectIndexes = []
 		if (buildMode == 0) {
 			if (mouseButtons[0]) {
 				level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)] = tileBrush
@@ -250,19 +260,65 @@ class GameLayer_Class {
 			if (mouseButtons[2]) {
 				delete(level.tiles[Math.trunc((mouse[0]+camera_x)/16)+","+Math.trunc((mouse[1]+camera_y)/16)])
 			}
+			is_dragging_selection = false
+			enemySelectOffsets = []
 		} else if (buildMode == 1) {
 			if (mouseButtons[0]) {
 				temp = true
 				if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
-					if (overlap({X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
+					if (overlap({X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2])) {
 						temp = false
+						if (mouseButtons_onpress[0] && overlap({X_neg:0,X_pos:0,Y_neg:0,Y_pos:0}, mouse[0]+camera_x, mouse[1]+camera_y, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2])) {
+							is_dragging_selection = true
+							if (keyboard.Shift) {
+								if (enemySelectIndexes.includes(i)) {
+									enemySelectIndexes.splice(enemySelectIndexes.indexOf(i),1)
+								} else {
+									enemySelectIndexes.push(i)
+									enemySelectIndexes.sort(function(a,b){return a-b;})
+								}
+							} else {
+								if (enemySelectIndexes != [i] && !enemySelectIndexes.includes(i)) enemySelectIndexes = [i]
+							}
+							enemySelectOffsets = []
+							for (let i2 = 0; i2 < enemySelectIndexes.length; i2++) {
+								enemySelectOffsets.push([level.enemies[enemySelectIndexes[i2]][1]-mouse[0]-camera_x-4,level.enemies[enemySelectIndexes[i2]][2]-mouse[1]-camera_y-12])
+							}
+						}
+					}
 				}
-				if (temp) level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
+				if (temp && !is_dragging_selection) {
+					if (keyboard.Shift) {
+						enemySelectIndexes.push(level.enemies.length)
+					} else {
+						enemySelectIndexes = []
+					}
+					level.enemies.push([enemyBrush, Math.trunc((mouse[0]+camera_x+4)/8)*8, Math.trunc((mouse[1]+camera_y+12)/8)*8])
+				}
+				if (is_dragging_selection) {
+					for (let i = 0; i < enemySelectIndexes.length; i++) {
+						level.enemies[enemySelectIndexes[i]][1] = mouse[0]+camera_x+4+enemySelectOffsets[i][0]
+						level.enemies[enemySelectIndexes[i]][2] = mouse[1]+camera_y+12+enemySelectOffsets[i][1]
+					}
+				}
+			} else {
+				is_dragging_selection = false
+				if (enemySelectOffsets.length > 0) for (let i = 0; i < enemySelectIndexes.length; i++) {
+					level.enemies[enemySelectIndexes[i]][1] = Math.trunc((level.enemies[enemySelectIndexes[i]][1]+4)/8)*8
+					level.enemies[enemySelectIndexes[i]][2] = Math.trunc((level.enemies[enemySelectIndexes[i]][2]+4)/8)*8
+				}
+				enemySelectOffsets = []
 			}
 			if (mouseButtons[2]) {
 				if (!level.enemies.length == 0) for (let i = 0; i < level.enemies.length; i++) {
-					if (overlap({X_neg:0,X_pos:0,Y_neg:0,Y_pos:0}, mouse[0]+camera_x, mouse[1]+camera_y, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2]))
+					if (overlap({X_neg:0,X_pos:0,Y_neg:0,Y_pos:0}, mouse[0]+camera_x, mouse[1]+camera_y, {X_neg:8,X_pos:8,Y_neg:16,Y_pos:0}, level.enemies[i][1], level.enemies[i][2])) {
+						enemySelectIndexes.sort(function(a,b){return a-b;})
+						if (enemySelectIndexes.includes(i)) enemySelectIndexes.splice(enemySelectIndexes.indexOf(i),1)
+						if (!enemySelectIndexes.includes(i)) for (let i2 = enemySelectIndexes.indexOf(i)+1; i2 < enemySelectIndexes.length; i2++) {
+							if (i <= enemySelectIndexes[i2]) enemySelectIndexes[i2] -= 1
+						}
 						level.enemies.splice(i,1)
+					}
 				}
 			}
 		} else if (buildMode == 2) {
@@ -300,6 +356,10 @@ class GameLayer_Class {
 			if (!(typeof(enemy_defs[enemyBrush].animationWidth) == 'undefined')) temp[0] = enemy_defs[enemyBrush].animationWidth
 			if (!(typeof(enemy_defs[enemyBrush].animationHeight) == 'undefined')) temp[1] =enemy_defs[enemyBrush].animationHeight
 			canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX+temp[0]/2-8, enemy_defs[enemyBrush].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
+			canvas.globalAlpha = 1
+		} else if (buildMode == 2) {
+			canvas.globalAlpha = 0.5
+			canvas.drawImage(img_ui, 0, 0, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16)
 			canvas.globalAlpha = 1
 		}
 		
@@ -391,26 +451,33 @@ class GameLayer_Class {
 				temp = [16,16]
 				if (!(typeof(enemy_defs[level.enemies[i][0]].animationWidth) == 'undefined')) temp[0] = enemy_defs[level.enemies[i][0]].animationWidth
 				if (!(typeof(enemy_defs[level.enemies[i][0]].animationHeight) == 'undefined')) temp[1] = enemy_defs[level.enemies[i][0]].animationHeight
-				
+				let spritesheet = img_sprites
+				if (enemySelectIndexes.includes(i)) spritesheet = img_sprites_select
 				if (!(typeof(enemy_defs[level.enemies[i][0]].animation) == 'undefined')) {
 					if (!(level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]+1) || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]] || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction.isContainer) {
 						canvas.globalAlpha = 0.5
-						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX, enemy_defs[level.enemies[i][0]].animation[0].frameY, temp[0], temp[1], level.enemies[i][1]-8-camera_x-temp[0]/2+8, level.enemies[i][2]-15-camera_y-temp[1]+16, temp[0], temp[1])
+						canvas.drawImage(spritesheet, enemy_defs[level.enemies[i][0]].animation[0].frameX, enemy_defs[level.enemies[i][0]].animation[0].frameY, temp[0], temp[1], level.enemies[i][1]-8-camera_x-temp[0]/2+8, level.enemies[i][2]-15-camera_y-temp[1]+16, temp[0], temp[1])
 						canvas.globalAlpha = 1
-						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX+temp[0]/2-8, enemy_defs[level.enemies[i][0]].animation[0].frameY+temp[1]-16, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
+						canvas.drawImage(spritesheet, enemy_defs[level.enemies[i][0]].animation[0].frameX+temp[0]/2-8, enemy_defs[level.enemies[i][0]].animation[0].frameY+temp[1]-16, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
 					} else {
 						canvas.globalAlpha = 0.5
-						canvas.drawImage(img_sprites, enemy_defs[level.enemies[i][0]].animation[0].frameX+temp[0]/2-8, enemy_defs[level.enemies[i][0]].animation[0].frameY+temp[1]-16, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-16-camera_y, 16, 16)
+						canvas.drawImage(spritesheet, enemy_defs[level.enemies[i][0]].animation[0].frameX+temp[0]/2-8, enemy_defs[level.enemies[i][0]].animation[0].frameY+temp[1]-16, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-16-camera_y, 16, 16)
 						canvas.globalAlpha = 1
 						canvas.drawImage(img_ui, 38, 6, 8, 10, level.enemies[i][1]-4-camera_x, level.enemies[i][2]-13-camera_y, 8, 10)
 					}
 				} else {
-					canvas.drawImage(img_sprites, enemy_defs["inherit"].animation[0].frameX, enemy_defs["inherit"].animation[0].frameY, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
+					canvas.drawImage(spritesheet, enemy_defs["inherit"].animation[0].frameX, enemy_defs["inherit"].animation[0].frameY, 16, 16, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
 				}
 				
 			} else {
 				canvas.drawImage(img_error, level.enemies[i][1]-8-camera_x, level.enemies[i][2]-15-camera_y, 16, 16)
 			}
+		}
+		if (enemySelectIndexes.length > 0) {
+			canvas.globalAlpha = 0.5
+			canvas.drawImage(img_ui, 59, 0, 13, 13, level.enemies[enemySelectIndexes[0]][1]-24-camera_x, level.enemies[enemySelectIndexes[0]][2]-14-camera_y, 13, 13)
+			canvas.globalAlpha = 1
+			canvas.drawImage(img_ui, 46, 0, 13, 13, level.enemies[enemySelectIndexes[0]][1]+11-camera_x, level.enemies[enemySelectIndexes[0]][2]-14-camera_y, 13, 13)
 		}
 		
 		//mario
@@ -425,6 +492,7 @@ class GameLayer_Class {
 	game_test() {
 		gameLayer = "game_test"
 		startGame()
+		mus_current = mus.smb.overworld
 		camera_x = level.marioX-128;
 		camera_y = level.marioY-120;
 	}
@@ -432,6 +500,9 @@ class GameLayer_Class {
 		g_layer.game_update()
 		if (keyboard_onpress.Enter || keyboard_onpress.Escape || Mario.deathtimer > 240) {
 			gameLayer = "edit"
+			enemies = []
+			if(typeof(mus_current)!='undefined') mus_current.stop()
+			mus_current = mus.edit
 		}
 	}
 	game_test_draw() {
@@ -453,6 +524,8 @@ class GameLayer_Class {
 		tpstick += 1
 	}
 	global_update_pre() {
+		if (typeof(mus_current)!='undefined' && !mus_current.loop) mus_current.loop = true
+		if (typeof(mus_current)!='undefined' && mus_current.volume != 0.7) mus_current.volume = 0.7
 		if (!(menus.length == 0)) {
 			handleMenu(menus[menus.length-1][2], menus[menus.length-1][0], menus[menus.length-1][1])
 		}
@@ -488,6 +561,9 @@ class GameLayer_Class {
 
 function startGame(menu_stack=[]) {
 	temp = 0
+	enemySelectIndexes = []
+	enemySelectOffsets = []
+	is_dragging_selection = false
 	deletingLevels = false
 	solid_hitboxes = []
 	hit_block = new Block_class(0, 0, 0, -999)
@@ -529,7 +605,9 @@ function startGame(menu_stack=[]) {
 		console.log("Game Starting")
 		buildMode = 0
 		editorTab = 0
+		mus_current = mus.title
 	}
+	if(typeof(mus_current)!='undefined') mus_current.stop()
 	console.log("\""+gameLayer+"\" Layer Starting")
 	loopStarted = true
 }
@@ -617,7 +695,9 @@ function newLevel(params) {
 	loadLevel(atob(
 	"eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="
 	))
-	g_layer.edit()
+	Mario.entity.x = level.marioX
+	Mario.entity.y = level.marioY
+	quitMenu()
 }
 function openLevel(params) {
 	quitMenu()
@@ -661,8 +741,6 @@ function loadEnemies() {
 		} else {
 			if (!(level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]+1) || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]] || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction || !tile_defs[level.tiles[(level.enemies[i][1]/16-0.5)+","+(level.enemies[i][2]/16-1)]].interaction.isContainer) {
 				enemies.push(new Baddie_Class(level.enemies[i][1], level.enemies[i][2], level.enemies[i][0]))
-			} else {
-				console.log("contained enemy placeholder")
 			}
 		}
 	}
@@ -679,6 +757,22 @@ function gameloop() {
 		if (g_layer.doGlobal) g_layer.global_update_pre();
 		if (menus.length == 0 || !menu_defs[menus[menus.length-1][2]].pauses) {
 			if (g_layer[gameLayer] && gameLayer != "global") g_layer[gameLayer+"_update"]();
+		}
+		if (!Mario.dead && (menus.length == 0 || !menu_defs[menus[menus.length-1][2]].pauses)){
+			if(typeof(mus_current)!='undefined') {
+				var promise = mus_current.play()
+				if (mus_current.currentTime >= mus_current.duration-0.07) mus_current.currentTime = 0
+				if (promise !== undefined) {
+					promise.catch(error => {
+						// Auto-play was prevented
+						// Show a UI element to let the user manually start playback
+					}).then(() => {
+						// Auto-play started
+					});
+				}
+			}
+		}else{
+			if(typeof(mus_current)!='undefined') mus_current.pause()
 		}
 		if (g_layer.doGlobal) g_layer.global_update();
 	}
@@ -702,11 +796,13 @@ function renderloop() {
 
 function activateTile(x, y, destroy) {
 //Particle_class(xpos, ypos, xv, yv, imgX, imgY, imgW, imgH, gravity, lifetime, frames, speed)
+	let playbump = true
 	if (!(level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 }))) {
 		if (tile_defs[level.temptiles[x+","+y]].interaction.hasCoin) {
 			particles.push(new Particle_class((x+0.5)*16, y*16, 0, -7, 32, 8, 8, 14, 0.45, 30, 4, 3))
 			Mario.coins += 1
 			level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
+			playSound("coin")
 		} else {
 			if (tile_defs[level.temptiles[x+","+y]].interaction.breakable && (Mario.powerup > 0 || destroy)) {
 				delete(level.temptiles[x+","+y])
@@ -714,6 +810,8 @@ function activateTile(x, y, destroy) {
 				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, 2, -8, 16, 8, 8, 8, 0.5, 60, 2, 2))
 				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, -2, -2, 16, 8, 8, 8, 0.5, 60, 2, 2))
 				particles.push(new Particle_class((x+0.5)*16, (y+0.5)*16, 2, -2, 16, 8, 8, 8, 0.5, 60, 2, 2))
+				playSound("blockbreak", 2)
+				playbump = false
 				Mario.entity.yv = 2
 				Mario.jumptimer = -1
 			}
@@ -722,10 +820,16 @@ function activateTile(x, y, destroy) {
 		level.temptiles[x+","+y] = tile_defs[level.temptiles[x+","+y]].interaction.hitTile
 		if (enemy_defs[level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]].jumpsoutofblock) {
 			enemies.push(new Baddie_Class(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
+			if (Mario.entity.x < x*16+8) {
+				enemies[enemies.length-1].direction = 1
+				enemies[enemies.length-1].mirrorvalue = -1
+			}
 			enemies[enemies.length-1].entity.yv = -25
+			playSound("powerup_appears")
 		} else {
 			bgparticles.push(new Enemy_block_animation(x*16+8, y*16, level.enemies.find(function(e){return e[1]=== x*16+8 &&e[2]=== y*16+16 })[0]))
 		}
 	}
 	hit_block = new Block_class(x, y)
+	if (playbump) playSound("bump")
 }

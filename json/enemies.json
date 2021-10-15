@@ -18,6 +18,14 @@
 			"frameX": 32,
 			"frameY": 0
 		},
+		"properties": {
+			"enabled": true,
+			"active": true,
+			"playercollision": true,
+			"background": false,
+			"forceload": false,
+			"moveright": false
+		},
 		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
 		"tilecollision": true,
 		"enemycollision": true,
@@ -109,7 +117,7 @@
 		],
 		"mirrors": false,
 		"deathFrame": {
-			"frameX": 32,
+			"frameX": 128,
 			"frameY": 0
 		},
 		"jumpsoutofblock": true
@@ -160,6 +168,24 @@
 		"enemycollision": false,
 		"growsMario": true,
 		"pointvalue": 4,
+		"blockimmune": true
+	},
+	"1up": {
+		"kills": false,
+		"destroyOnMario": true,
+		"canStomp": false,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 128,
+				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false,
+		"growsMario": false,
+		"pointvalue": 8,
 		"blockimmune": true
 	},
 	"bullet_bill": {
