@@ -6,6 +6,7 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <head>
     <meta charset="utf-8">
+	<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width">
 	<meta http-equiv="Cache-control" content="no-cache">
 	<meta http-equiv='expires' content='0'>
@@ -106,12 +107,17 @@ speedslider.oninput = function() {
 	</div><br><p><br>
 	<button type="button" onclick="this.blur(); window.location.reload(true);">UPDATE</button>
 	<input class="levelButtons" style="display: none" type="file" id="level_upload" onclick="this.blur();" accept=".lvl2"></input><br>
+	<input class="levelButtons" style="display: none" type="file" id="world_upload" onclick="this.blur();" accept=".wrld"></input><br>
 	<script>
 const levelUpload = document.getElementById('level_upload');
 levelUpload.addEventListener('change', (event) => {
 	const fileList = event.target.files;
-	console.log(fileList);
 	readLevel(fileList[0]);
+});
+const worldUpload = document.getElementById('world_upload');
+worldUpload.addEventListener('change', (event) => {
+	const fileList = event.target.files;
+	readWorld(fileList[0]);
 });
 	</script>
 	<script>

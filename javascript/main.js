@@ -196,6 +196,11 @@ class GameLayer_Class {
 	}
 	edit_update() {
 		//edit menu
+		if (scrollDirection != 0) scrollPreviewTimer = 120
+		if (scrollDirection == -1 && buildMode == 0 && tileBrush < tile_defs.length-1) tileBrush += 1
+		if (scrollDirection == 1 && buildMode == 0 && tileBrush > 0) tileBrush -= 1
+		if (scrollDirection == -1 && buildMode == 1 && edit_menu.enemies.indexOf(enemyBrush) < edit_menu.enemies.length-1) enemyBrush = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)+1]
+		if (scrollDirection == 1 && buildMode == 1 && edit_menu.enemies.indexOf(enemyBrush) > 0) enemyBrush = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)-1]
 		if (keyboard_onpress.key_Tab && buildMode < 2) editorTab = buildMode = 1-buildMode
 		if (keyboard_onpress.key_Tab && buildMode >= 2) editorTab = buildMode = 0
 		if (keyboard_onpress.key_1) buildMode = 0
@@ -250,7 +255,7 @@ class GameLayer_Class {
 			loadEnemies();
 		}
 		tileanim_timer += 0.03
-		
+		scrollPreviewTimer --
 		//building
 		if (buildMode != 1) enemySelectIndexes = []
 		if (buildMode == 0) {
@@ -347,15 +352,64 @@ class GameLayer_Class {
 		
 		//tilepreview
 		if (buildMode == 0) {
-			canvas.globalAlpha = 0.5
-			canvas.drawImage(img_tileset, tile_defs[tileBrush].tileX*16, tile_defs[tileBrush].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y, 16, 16);
-			canvas.globalAlpha = 1
+			if (scrollPreviewTimer > 0) {
+				canvas.globalAlpha = 0.75
+				canvas.drawImage(img_tileset, tile_defs[tileBrush].tileX*16, tile_defs[tileBrush].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y, 16, 16);
+				canvas.globalAlpha = 0.25
+				if (tile_defs[tileBrush-1]) canvas.drawImage(img_tileset, tile_defs[tileBrush-1].tileX*16, tile_defs[tileBrush-1].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y-16, 16, 16);
+				if (tile_defs[tileBrush-2]) canvas.drawImage(img_tileset, tile_defs[tileBrush-2].tileX*16, tile_defs[tileBrush-2].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y-32, 16, 16);
+				if (tile_defs[tileBrush+1]) canvas.drawImage(img_tileset, tile_defs[tileBrush+1].tileX*16, tile_defs[tileBrush+1].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y+16, 16, 16);
+				if (tile_defs[tileBrush+2]) canvas.drawImage(img_tileset, tile_defs[tileBrush+2].tileX*16, tile_defs[tileBrush+2].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y+32, 16, 16);
+				canvas.globalAlpha = 1
+			} else {
+				canvas.globalAlpha = 0.5
+				canvas.drawImage(img_tileset, tile_defs[tileBrush].tileX*16, tile_defs[tileBrush].tileY*16, 16, 16, Math.trunc((mouse[0]+camera_x)/16)*16-camera_x, Math.trunc((mouse[1]+camera_y)/16)*16-camera_y, 16, 16);
+				canvas.globalAlpha = 1
+			}
 		} else if (buildMode == 1) {
-			canvas.globalAlpha = 0.5
-			temp = [16,16]
-			if (!(typeof(enemy_defs[enemyBrush].animationWidth) == 'undefined')) temp[0] = enemy_defs[enemyBrush].animationWidth
-			if (!(typeof(enemy_defs[enemyBrush].animationHeight) == 'undefined')) temp[1] =enemy_defs[enemyBrush].animationHeight
-			canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX+temp[0]/2-8, enemy_defs[enemyBrush].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
+			if (scrollPreviewTimer > 0) {
+				canvas.globalAlpha = 0.75
+				let temp = [16,16]
+				let drawnenemy = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)]
+				if (!(typeof(enemy_defs[drawnenemy].animationWidth) == 'undefined')) temp[0] = enemy_defs[drawnenemy].animationWidth
+				if (!(typeof(enemy_defs[drawnenemy].animationHeight) == 'undefined')) temp[1] =enemy_defs[drawnenemy].animationHeight
+				canvas.drawImage(img_sprites, enemy_defs[drawnenemy].animation[0].frameX+temp[0]/2-8, enemy_defs[drawnenemy].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
+				canvas.globalAlpha = 0.25
+				drawnenemy = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)-1]
+				if (drawnenemy) {
+					temp = [16,16]
+					if (!(typeof(enemy_defs[drawnenemy].animationWidth) == 'undefined')) temp[0] = enemy_defs[drawnenemy].animationWidth
+					if (!(typeof(enemy_defs[drawnenemy].animationHeight) == 'undefined')) temp[1] =enemy_defs[drawnenemy].animationHeight
+					canvas.drawImage(img_sprites, enemy_defs[drawnenemy].animation[0].frameX+temp[0]/2-8, enemy_defs[drawnenemy].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y-16, 16, 16)
+				}
+				drawnenemy = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)-2]
+				if (drawnenemy) {
+					temp = [16,16]
+					if (!(typeof(enemy_defs[drawnenemy].animationWidth) == 'undefined')) temp[0] = enemy_defs[drawnenemy].animationWidth
+					if (!(typeof(enemy_defs[drawnenemy].animationHeight) == 'undefined')) temp[1] =enemy_defs[drawnenemy].animationHeight
+					canvas.drawImage(img_sprites, enemy_defs[drawnenemy].animation[0].frameX+temp[0]/2-8, enemy_defs[drawnenemy].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y-32, 16, 16)
+				}
+				drawnenemy = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)+1]
+				if (drawnenemy) {
+					temp = [16,16]
+					if (!(typeof(enemy_defs[drawnenemy].animationWidth) == 'undefined')) temp[0] = enemy_defs[drawnenemy].animationWidth
+					if (!(typeof(enemy_defs[drawnenemy].animationHeight) == 'undefined')) temp[1] =enemy_defs[drawnenemy].animationHeight
+					canvas.drawImage(img_sprites, enemy_defs[drawnenemy].animation[0].frameX+temp[0]/2-8, enemy_defs[drawnenemy].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y+16, 16, 16)
+				}
+				drawnenemy = edit_menu.enemies[edit_menu.enemies.indexOf(enemyBrush)+2]
+				if (drawnenemy) {
+					temp = [16,16]
+					if (!(typeof(enemy_defs[drawnenemy].animationWidth) == 'undefined')) temp[0] = enemy_defs[drawnenemy].animationWidth
+					if (!(typeof(enemy_defs[drawnenemy].animationHeight) == 'undefined')) temp[1] =enemy_defs[drawnenemy].animationHeight
+					canvas.drawImage(img_sprites, enemy_defs[drawnenemy].animation[0].frameX+temp[0]/2-8, enemy_defs[drawnenemy].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y+32, 16, 16)
+				}
+			} else {
+				canvas.globalAlpha = 0.5
+				temp = [16,16]
+				if (!(typeof(enemy_defs[enemyBrush].animationWidth) == 'undefined')) temp[0] = enemy_defs[enemyBrush].animationWidth
+				if (!(typeof(enemy_defs[enemyBrush].animationHeight) == 'undefined')) temp[1] =enemy_defs[enemyBrush].animationHeight
+				canvas.drawImage(img_sprites, enemy_defs[enemyBrush].animation[0].frameX+temp[0]/2-8, enemy_defs[enemyBrush].animation[0].frameY+temp[1]-16, 16, 16, Math.trunc((mouse[0]+camera_x-4)/8)*8-camera_x, Math.trunc((mouse[1]+camera_y-4)/8)*8+1-camera_y, 16, 16);
+			}
 			canvas.globalAlpha = 1
 		} else if (buildMode == 2) {
 			canvas.globalAlpha = 0.5
@@ -514,6 +568,7 @@ class GameLayer_Class {
 	global_update() {
 		mouseButtons_onpress = [false, false, false]
 		keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
+		scrollDirection = 0
 		debug[0].innerHTML = "X: "+Math.round(Mario.entity.x*100)/100
 		debug[1].innerHTML = "Y: "+Math.round(Mario.entity.y*100)/100
 		debug[2].innerHTML = "XV: "+Math.round(Mario.entity.xv*100)/100
@@ -561,6 +616,7 @@ class GameLayer_Class {
 
 function startGame(menu_stack=[]) {
 	temp = 0
+	scrollPreviewTimer = 0
 	enemySelectIndexes = []
 	enemySelectOffsets = []
 	is_dragging_selection = false
@@ -580,7 +636,7 @@ function startGame(menu_stack=[]) {
 	lastLoop = Date.now()
 	if(window.location.hash) {
 		hash = window.location.hash.substring(1); //Puts hash in variable, and removes the # character
-		loadLevel(atob(hash)); //Parses the hash as a .lvl2 file and loads the level
+		loadPack(atob(hash)); //Parses the hash as a .lvl2 file and loads the level
 	}
 	level.temptiles = JSON.parse(JSON.stringify(level.tiles))
 	Mario = new Mario_Class(level.marioX,level.marioY)
@@ -591,7 +647,7 @@ function startGame(menu_stack=[]) {
 	tileanim_timer = 0;
 	keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false} 
 	if (!loopStarted) {
-		levelpack = [["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="]]
+		levelpack = [["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjI0LCJtYXJpb1kiOjE2LCJzZXR0aW5ncyI6eyJjYW1lcmEiOjEsImhlaWdodCI6MCwid2lkdGgiOjE2LCJlbmVteV9oaWdoX2p1bXAiOnRydWUsInRpbWVyIjo0MDAsIm9sZHBhcnRpY2xlcyI6ZmFsc2V9LCJ0aWxlcyI6eyI5LDgiOjEsIjEwLDgiOjEsIjExLDgiOjEsIjEyLDgiOjEsIjEzLDgiOjEsIjE0LDgiOjEsIjE1LDgiOjEsIjAsMTMiOjQsIjEsMTMiOjQsIjIsMTMiOjQsIjMsMTMiOjQsIjQsMTMiOjAsIjYsMTMiOjAsIjYsMTIiOjQsIjYsMTEiOjAsIjYsMTAiOjAsIjYsOSI6MCwiNiw4IjowLCIxMyw5Ijo0LCI3LDEzIjowLCI4LDEzIjowLCI5LDEzIjowLCIxMCwxMyI6MCwiMTEsMTMiOjAsIjEyLDEzIjowLCIxMywxMyI6MCwiMTQsMTMiOjAsIjE1LDEzIjowLCIxNiwxMyI6MCwiMTcsMTMiOjAsIjE4LDEzIjowLCIxOSwxMyI6MCwiMjAsMTMiOjAsIjIxLDEzIjowLCIyMiwxMyI6MCwiMjMsMTMiOjAsIjI0LDEzIjowLCIyNSwxMyI6MCwiMjYsMTMiOjAsIjI3LDEzIjowLCIyOCwxMyI6MCwiMjksMTMiOjAsIjMwLDEzIjowLCIzMSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltbImdvb21iYSIsNDgsNDhdLFsiZ29vbWJhIiw5Niw0OF0sWyJnb29tYmEiLDEyOCw0OF0sWyJnb29tYmEiLDE0NCw0OF0sWyJidWxsZXRfYmlsbCIsMTI4LDE0NF1dLCJ0ZW1wdGlsZXMiOnsiOSw4IjoxLCIxMCw4IjoxLCIxMSw4IjoxLCIxMiw4IjoxLCIxMyw4IjoxLCIxNCw4IjoxLCIxNSw4IjoxLCIwLDEzIjo0LCIxLDEzIjo0LCIyLDEzIjo0LCIzLDEzIjo0LCI0LDEzIjowLCI2LDEzIjowLCI2LDEyIjo0LCI2LDExIjowLCI2LDEwIjowLCI2LDkiOjAsIjYsOCI6MCwiMTMsOSI6NCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMTYsMTMiOjAsIjE3LDEzIjowLCIxOCwxMyI6MCwiMTksMTMiOjAsIjIwLDEzIjowLCIyMSwxMyI6MCwiMjIsMTMiOjAsIjIzLDEzIjowLCIyNCwxMyI6MCwiMjUsMTMiOjAsIjI2LDEzIjowLCIyNywxMyI6MCwiMjgsMTMiOjAsIjI5LDEzIjowLCIzMCwxMyI6MCwiMzEsMTMiOjAsIjAsMTQiOjAsIjEsMTQiOjAsIjIsMTQiOjAsIjMsMTQiOjAsIjQsMTQiOjAsIjUsMTQiOjAsIjYsMTQiOjAsIjcsMTQiOjAsIjgsMTQiOjAsIjksMTQiOjAsIjEwLDE0IjowLCIxMSwxNCI6MCwiMTIsMTQiOjAsIjEzLDE0IjowLCIxNCwxNCI6MCwiMTUsMTQiOjB9fQ=="]]
 		currentlevel = [0,0]
 		g_layer = new GameLayer_Class
 		gameLayer = "menu" //g_layer.menu();
@@ -627,13 +683,33 @@ function loadTempEditmenu() {
 	}
 }
 
+function triggermenu(texts, clickoptions) {
+	mouseButtons = [false, false, false]
+	mouseButtons_onpress = [false, false, false]
+	menu_defs.trigger = {
+		type: "popup",
+		width: 232,
+		height: 216,
+		padding: 8,
+		pauses: false,
+		esc_close: true,
+		text: texts,
+		text_shadowed: [],
+		options: [
+			[0, 0, "disabled"]
+		],
+		click_options: clickoptions
+	}
+	addMenu(12,12,"trigger",false)
+}
+
 function addWorld(params) {
 	levelpack.push(["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="])
 	loadTempEditmenu()
 }
 
 function addLevel(params) {
-	levelpack[params[0]].push(["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="])
+	levelpack[params[0]].push("eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ==")
 	loadTempEditmenu()
 }
 
@@ -672,8 +748,15 @@ function quitMenu() {
 
 function saveLevel(params) {
 	quitMenu()
+	levelpack[currentlevel[0]][currentlevel[1]] = btoa(JSON.stringify(level))
 	download_file('level.lvl2', btoa(JSON.stringify(level)))
 	addMenu(64, 92, "dialouge_save", false)
+}
+function saveWorld(params) {
+	quitMenu()
+	levelpack[currentlevel[0]][currentlevel[1]] = btoa(JSON.stringify(level))
+	download_file('levelpack.wrld', btoa(JSON.stringify(levelpack)))
+	addMenu(64, 92, "dialouge_save_world", false)
 }
 
 function packLoadLevel(params) {
@@ -687,7 +770,7 @@ function packLoadLevel(params) {
 
 function exportLevel(params) {
 	quitMenu()
-	window.open('https://gdengine.github.io/Toolbox-JS/#'+btoa(JSON.stringify(level)))
+	window.open(window.location.href+'/#'+btoa(JSON.stringify(levelpack)))
 	addMenu(64, 92, "dialouge_export", false)
 }
 function newLevel(params) {
@@ -699,9 +782,24 @@ function newLevel(params) {
 	Mario.entity.y = level.marioY
 	quitMenu()
 }
+function resetWorld(params) {
+	levelpack = [["eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="]]
+	currentlevel = [0,0]
+	loadLevel(atob(
+	"eyJ0eXBlIjoiVjEiLCJtYXJpb1giOjMyLCJtYXJpb1kiOjIwOCwic2V0dGluZ3MiOnsiY2FtZXJhIjowLCJoZWlnaHQiOjAsIndpZHRoIjowLCJlbmVteV9oaWdoX2p1bXAiOmZhbHNlLCJ0aW1lciI6NDAwfSwidGlsZXMiOnsiMCwxMyI6MCwiMSwxMyI6MCwiMiwxMyI6MCwiMywxMyI6MCwiNCwxMyI6MCwiNSwxMyI6MCwiNiwxMyI6MCwiNywxMyI6MCwiOCwxMyI6MCwiOSwxMyI6MCwiMTAsMTMiOjAsIjExLDEzIjowLCIxMiwxMyI6MCwiMTMsMTMiOjAsIjE0LDEzIjowLCIxNSwxMyI6MCwiMCwxNCI6MCwiMSwxNCI6MCwiMiwxNCI6MCwiMywxNCI6MCwiNCwxNCI6MCwiNSwxNCI6MCwiNiwxNCI6MCwiNywxNCI6MCwiOCwxNCI6MCwiOSwxNCI6MCwiMTAsMTQiOjAsIjExLDE0IjowLCIxMiwxNCI6MCwiMTMsMTQiOjAsIjE0LDE0IjowLCIxNSwxNCI6MH0sImVuZW1pZXMiOltdfQ=="
+	))
+	Mario.entity.x = level.marioX
+	Mario.entity.y = level.marioY
+	quitMenu()
+	quitMenu()
+}
 function openLevel(params) {
 	quitMenu()
 	document.getElementById('level_upload').click()
+}
+function openWorld(params) {
+	quitMenu()
+	document.getElementById('world_upload').click()
 }
 
 function selectTile(params) {

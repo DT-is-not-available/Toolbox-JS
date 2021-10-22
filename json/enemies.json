@@ -19,12 +19,12 @@
 			"frameY": 0
 		},
 		"properties": {
-			"enabled": true,
-			"active": true,
-			"playercollision": true,
-			"background": false,
-			"forceload": false,
-			"moveright": false
+			"ENABLED": true,
+			"ACTIVE": true,
+			"PLAYER COLLISION": true,
+			"BACKGROUND": false,
+			"FORCE LOAD": false,
+			"FACE RIGHT": false
 		},
 		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
 		"tilecollision": true,

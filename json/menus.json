@@ -133,6 +133,27 @@
 			["button", ["CLOSE", 48, 12], 0, 44, "close"]
 		]
 	},
+	"dialouge_save_world": {
+		"type": "overlay_border",
+		"width": 128,
+		"height": 56,
+		"padding": 8,
+		"pauses": false,
+		"esc_close": true,
+		"text": [
+			["SAVED!", 0, 0, 1],
+			["LPACK HAS BEEN", 0, 16, 1],
+			["DOWNLOADED AS A", 0, 24, 1],
+			[".LVPK FILE", 0, 32, 1]
+		],
+		"text_shadowed": [],
+		"options": [
+			[0, 0, "disabled"]
+		],
+		"click_options": [
+			["button", ["CLOSE", 48, 12], 0, 44, "close"]
+		]
+	},
 	"dialouge_file": {
 		"type": "overlay_border",
 		"width": 56,
@@ -156,13 +177,13 @@
 	},
 	"popup_file": {
 		"type": "popup",
-		"width": 72,
+		"width": 152,
 		"height": 60,
 		"padding": 8,
 		"pauses": false,
 		"esc_close": true,
 		"text": [
-			["FILE", 0, 0, 1]
+			["LEVEL     LEVELPACK", 0, 0, 1]
 		],
 		"text_shadowed": [],
 		"options": [
@@ -170,9 +191,12 @@
 		],
 		"click_options": [
 			["button", ["CLEAR", 44, 12], 0, 12, "function", "newLevel", []],
-			["button", ["IMPORT", 52, 12], 0, 24, "function", "openLevel", []],
+			["button", ["UPLOAD", 52, 12], 0, 24, "function", "openLevel", []],
 			["button", ["DOWNLOAD", 68, 12], 0, 36, "function", "saveLevel", []],
-			["button", ["EXPORT", 52, 12], 0, 48, "function", "exportLevel", []]
+			["button", ["RESET", 44, 12], 80, 12, "function", "resetWorld", []],
+			["button", ["UPLOAD", 52, 12], 80, 24, "function", "openWorld", []],
+			["button", ["DOWNLOAD", 68, 12], 80, 36, "function", "saveWorld", []],
+			["button", ["EXPORT", 52, 12], 80, 48, "function", "exportLevel", []]
 		]
 	},
 	"edit_menu": {

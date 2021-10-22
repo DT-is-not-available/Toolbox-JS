@@ -144,8 +144,11 @@ function handleMenu(id, xpos=0, ypos=0) {
 	keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
 	//clickMenu
 	if (menu_defs[id].click_options && menu_defs[id].click_options.length > 0) {
-			for (let i = 0; i < menu_defs[id].click_options.length; i++) {
+		for (let i = 0; i < menu_defs[id].click_options.length; i++) {
 			if (menu_defs[id].click_options[i][0] == "button" && mouseButtons[0] && overlap({X_neg: 0, X_pos: 0, Y_neg: 0, Y_pos: 0}, mouse[0], mouse[1], {X_neg: 0, X_pos: menu_defs[id].click_options[i][1][1], Y_neg: 0, Y_pos: menu_defs[id].click_options[i][1][2]}, xpos+menu_defs[id].click_options[i][2], ypos+menu_defs[id].click_options[i][3])) {
+				handleMenuAction(menu_defs[id].click_options[i], 4)
+			}
+			if (menu_defs[id].click_options[i][0] == "checkbox" && mouseButtons[0] && overlap({X_neg: 0, X_pos: 0, Y_neg: 0, Y_pos: 0}, mouse[0], mouse[1], {X_neg: 0, X_pos: 9, Y_neg: 0, Y_pos: 9}, xpos+menu_defs[id].click_options[i][2], ypos+menu_defs[id].click_options[i][3])) {
 				handleMenuAction(menu_defs[id].click_options[i], 4)
 			}
 		}

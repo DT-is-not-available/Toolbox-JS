@@ -2,6 +2,24 @@ Math.mod = function(val,maxval){
 	return val-(Math.trunc(val/maxval)*maxval)
 }
 
+function getServerTest(Data={name:"g"}) {
+    const Url='http://toolbox-webserver.rf.gd/server.php'
+    const othePram={
+        headers:{
+            "content-type":"application/json; charset=UTF-8"
+        },
+        body:Data,
+        method:"POST"
+    };
+    fetch(Url,othePram)
+    .then(data=>{return data.json()})
+    .then(res=>{
+        console.log(res)
+    })
+    .catch(error=>console.log(error))
+}
+getServerTest()
+
 Audio.prototype.stop = function(){
 	this.pause()
 	this.currentTime = 0
@@ -20,6 +38,7 @@ function resetkeys() {
 	keyboard_Shift = false
 }
 keyboard_Shift = false
+scrollDirection = 0
 
 function onscreen(hitbox_1, x_p, y_p) {
 	return overlap(hitbox_1, x_p, y_p, {X_pos: 256, X_neg: 0, Y_pos: 240, Y_neg: 0}, Math.round(camera_x), Math.round(camera_y))
@@ -110,17 +129,34 @@ function readLevel(file) {
   reader.readAsText(file);
 }
 
+function readWorld(file) {
+  const reader = new FileReader();
+  reader.addEventListener('load', (event) => {
+    loadPack(atob(event.target.result))
+	Mario.entity.x = level.marioX
+	Mario.entity.y = level.marioY
+	quitMenu()
+  });
+  reader.readAsText(file);
+}
+function loadPack(worldstring) {
+	levelpack = JSON.parse(worldstring)
+	loadLevel(atob(levelpack[0][0]))
+	currentlevel = [0,0]
+}
 function loadLevel(levelstring) {
 	level = JSON.parse(levelstring);
 	if (typeof(level.settings.oldparticles) === "undefined") level.settings.oldparticles = false
 	if (typeof(level.settings.time) === "undefined") level.settings.timer = 400
+	enemySelectIndexes = []
 }
 
 //input
 
 document.addEventListener('wheel', function(event) {
 	event.preventDefault()
-});
+	scrollDirection = event.wheelDeltaY/Math.abs(event.wheelDeltaY)
+}, {passive:false});
 
 //keyboard
 
