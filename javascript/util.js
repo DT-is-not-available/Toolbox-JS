@@ -2,8 +2,8 @@ Math.mod = function(val,maxval){
 	return val-(Math.trunc(val/maxval)*maxval)
 }
 
-function getServerTest(Data={name:"g"}) {
-    const Url='http://toolbox-webserver.rf.gd/server.php'
+function getServerTest(Data={id:1}) {
+    const Url='http://localhost:8001/getlevel.php'
     const othePram={
         headers:{
             "content-type":"application/json; charset=UTF-8"
@@ -89,11 +89,11 @@ function setScale(amount) {
 }
 
 function setScaleAuto() {
-	if (window.innerHeight >= 256*4) {
+	if (window.innerHeight >= 240*4) {
 		setScale(4);
-	}else if (window.innerHeight >= 256*3) {
+	}else if (window.innerHeight >= 240*3) {
 		setScale(3);
-	}else if (window.innerHeight >= 256*2) {
+	}else if (window.innerHeight >= 240*2) {
 		setScale(2);
 	}else{
 		setScale(1);
@@ -101,7 +101,7 @@ function setScaleAuto() {
 }
 
 function setScaleFit() {
-	setScale((window.innerHeight)/256);
+	setScale((window.innerHeight)/240);
 }
 
 function posToTile(coord) {return Math.trunc(coord/16)}
@@ -293,5 +293,13 @@ function reloadData(){
 		}
 	};
 	xhttp.open("GET", "./json/editmenu.json", true);
+	xhttp.send();
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			menu_defs = JSON.parse(this.responseText);
+		}
+	};
+	xhttp.open("GET", "./json/menus.json", true);
 	xhttp.send();
 }

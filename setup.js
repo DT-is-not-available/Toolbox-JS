@@ -10,6 +10,10 @@ mouseButtons_onpress = [false, false, false]
 mouse = [0, 0]
 loopStarted = false
 
+online = {
+	sort: 0
+}
+
 function recolor(oldimg, color, alpha=1){
 	canvas.canvas.width  = 1000;
 	canvas.canvas.height = 1000;

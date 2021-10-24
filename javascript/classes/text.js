@@ -141,7 +141,7 @@ function handleMenu(id, xpos=0, ypos=0) {
 	if (menuOption < 0) menuOption = 0
 	if (keyboard.Escape && menu_defs[id].esc_close) quitMenu()
 	keyboard = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
-	keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
+	if (menu_defs[id].esc_close) keyboard_onpress.Escape = false
 	//clickMenu
 	if (menu_defs[id].click_options && menu_defs[id].click_options.length > 0) {
 		for (let i = 0; i < menu_defs[id].click_options.length; i++) {
@@ -183,6 +183,7 @@ function handleMenuAction(action, offset=2){
 	}
 	if (action[offset] == "quick_layer") {
 		gameLayer = action[offset+1]
+		menuOption = 0
 		menus = []
 	}
 	if (action[offset] == "function") {
@@ -211,4 +212,7 @@ function settings_sub(params) {
 }
 function settings_toggle(params) {
 	level.settings[params[0]] = (!level.settings[params[0]])
+}
+function online_toggle(params) {
+	online[params[0]] = 1-online[params[0]]
 }

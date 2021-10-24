@@ -565,6 +565,31 @@ class GameLayer_Class {
 		drawText(8, 26+(debug_mode*24), "TEST MODE: PRESS ENTER TO EDIT")
 		canvas.globalAlpha = 1
 	}
+	online() {
+		gameLayer = "online"
+		packLoadLevel([0,0])
+		startGame()
+		mus_current = mus.title
+	}
+	online_update() {
+		tileanim_timer += 0.03
+		if (menus.length == 0) menus = [[0, 0, "online_menu",false]]
+		if (keyboard_onpress.Escape) gameLayer = "menu"
+		if (keyboard_onpress.Escape) quitMenu()
+		camera_x += 0.1
+		if (camera_x > level.settings.width*16+256) camera_x = -256
+		camera_y = 0
+		window.title_y += window.title_yv/50
+		window.title_yv += -(Math.abs(window.title_y)/window.title_y)*0.01
+	}
+	online_draw() {
+	
+		drawTileSet(level.tiles);
+		//canvas.drawImage(image, image x, image y, image width, image height, x pos, y pos, width, height)
+		//canvas.drawImage(img_title, 1, 91, 184, 88, 36, 28+Math.round(window.title_y), 184, 88);
+		//drawText(36, 28+89+Math.round(window.title_y), "JAVASCRIPT EDITION");
+		
+	}
 	global_update() {
 		mouseButtons_onpress = [false, false, false]
 		keyboard_onpress = {W: false, S: false, A: false, D: false, Space: false, Shift: false, Enter: false, Escape: false}
