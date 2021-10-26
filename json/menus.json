@@ -29,11 +29,23 @@
 		"padding": 0,
 		"pauses": false,
 		"text": [
-			["TEST LEVEL", 23, 53, 1],
-			["BY DT", 23, 61, 0.75],
-			["THIS IS A VERY GOOD", 23, 71, 0.5],
-			["DESCRIPTION THAT TAKES UP", 23, 79, 0.5],
-			["MULTIPLE LINES.", 23, 87, 0.5]
+			[["online", "level_1", "title"], 23, 53, 1],
+			[["online", "level_1", "author"], 23, 61, 0.75],
+			[["online", "level_1", "description1"], 23, 71, 0.5],
+			[["online", "level_1", "description2"], 23, 79, 0.5],
+			[["online", "level_1", "description3"], 23, 87, 0.5],
+			[["online", "level_2", "title"], 23, 109, 1],
+			[["online", "level_2", "author"], 23, 117, 0.75],
+			[["online", "level_2", "description1"], 23, 127, 0.5],
+			[["online", "level_2", "description2"], 23, 135, 0.5],
+			[["online", "level_2", "description3"], 23, 143, 0.5],
+			[["online", "level_3", "title"], 23, 165, 1],
+			[["online", "level_3", "author"], 23, 173, 0.75],
+			[["online", "level_3", "description1"], 23, 183, 0.5],
+			[["online", "level_3", "description2"], 23, 191, 0.5],
+			[["online", "level_3", "description3"], 23, 199, 0.5],
+			["PAGE", 16, 40, 0.5],
+			[["online", "page"], 56, 40, 0.5]
 		],
 		"text_shadowed": [
 			["ONLINE LEVELS", 76, 12, 1]
@@ -45,11 +57,13 @@
 			[["online", "sort"], 100, 26, true, ["RECENTS","POPULAR"]]
 		],
 		"click_options": [
-			["button", ["BACK", 38, 12], 10, 10, "quick_layer", "menu"],
+			["button", ["BACK", 38, 12], 16, 10, "quick_layer", "menu"],
 			["button", ["", 62, 12], 97, 24, "function", "online_toggle", ["sort"]],
 			["button", ["", 224, 52], 16, 48, "function", "online_level", [0]],
 			["button", ["", 224, 52], 16, 104, "function", "online_level", [1]],
-			["button", ["", 224, 52], 16, 160, "function", "online_level", [2]]
+			["button", ["", 224, 52], 16, 160, "function", "online_level", [2]],
+			["button", ["PREV", 38, 12], 16, 216, "function", "online_sub", ["page",1]],
+			["button", ["NEXT", 38, 12], 202, 216, "function", "online_add", ["page"]]
 		]
 	},
 	"locked_main_menu": {

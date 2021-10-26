@@ -573,7 +573,11 @@ class GameLayer_Class {
 	}
 	online_update() {
 		tileanim_timer += 0.03
-		if (menus.length == 0) menus = [[0, 0, "online_menu",false]]
+		if (menus.length == 0) {
+			menus = [[0, 0, "online_menu",false]]
+			online.page = 1
+			getServer("sort="+online.sort+"&page="+online.page)
+		}
 		if (keyboard_onpress.Escape) gameLayer = "menu"
 		if (keyboard_onpress.Escape) quitMenu()
 		camera_x += 0.1

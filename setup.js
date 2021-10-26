@@ -11,7 +11,33 @@ mouse = [0, 0]
 loopStarted = false
 
 online = {
-	sort: 0
+	sort: 0,
+	loaded: false,
+	page: 1,
+	level_1: {
+		title: "...",
+		author: "",
+		description1: "",
+		description2: "",
+		description3: "",
+		loaded: false
+	},
+	level_2: {
+		title: "...",
+		author: "",
+		description1: "",
+		description2: "",
+		description3: "",
+		loaded: false
+	},
+	level_3: {
+		title: "...",
+		author: "",
+		description1: "",
+		description2: "",
+		description3: "",
+		loaded: false
+	}
 }
 
 function recolor(oldimg, color, alpha=1){

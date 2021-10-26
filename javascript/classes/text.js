@@ -92,7 +92,26 @@ function drawMenu(xpos, ypos, id, cursor=true, custom_draw=function(id){}) {
 	
 	if (!(menu_defs[id].text.length == 0)) for (let i = 0; i < menu_defs[id].text.length; i++) {
 		canvas.globalAlpha = menu_defs[id].text[i][3]
-		drawText(xpos+menu_defs[id].text[i][1], ypos+menu_defs[id].text[i][2], menu_defs[id].text[i][0])
+		if (JSON.stringify(menu_defs[id].text[i][0]).substring(0,1) == "[") {
+			if (menu_defs[id].text[i][0].length == 1) {
+				menuvar_temp = (window[menu_defs[id].text[i][0][0]].toString())
+			}
+			if (menu_defs[id].text[i][0].length == 2) {
+				menuvar_temp = (window[menu_defs[id].text[i][0][0]][menu_defs[id].text[i][0][1]].toString())
+			}
+			if (menu_defs[id].text[i][0].length == 3) {
+				menuvar_temp = (window[menu_defs[id].text[i][0][0]][menu_defs[id].text[i][0][1]][menu_defs[id].text[i][0][2]].toString())
+			}
+			if (menu_defs[id].text[i][0].length == 4) {
+				menuvar_temp = (window[menu_defs[id].text[i][0][0]][menu_defs[id].text[i][0][1]][menu_defs[id].text[i][0][2]][menu_defs[id].text[i][0][3]].toString())
+			}
+			if (menu_defs[id].text[i][0].length == 5) {
+				menuvar_temp = (window[menu_defs[id].text[i][0][0]][menu_defs[id].text[i][0][1]][menu_defs[id].text[i][0][2]][menu_defs[id].text[i][0][3]][menu_defs[id].text[i][0][4]].toString())
+			}
+			drawText(xpos+menu_defs[id].text[i][1], ypos+menu_defs[id].text[i][2], (menuvar_temp+" ").toUpperCase())
+		} else {
+			drawText(xpos+menu_defs[id].text[i][1], ypos+menu_defs[id].text[i][2], menu_defs[id].text[i][0])
+		}
 		canvas.globalAlpha = 1
 	}
 	
@@ -102,22 +121,22 @@ function drawMenu(xpos, ypos, id, cursor=true, custom_draw=function(id){}) {
 	
 	if (menu_defs[id].variable && menu_defs[id].variable.length > 0) for (let i = 0; i < menu_defs[id].variable.length; i++) {
 		if (menu_defs[id].variable[i][0].length == 1) {
-			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]].toString().toUpperCase())
+			menuvar_temp = (window[menu_defs[id].variable[i][0][0]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 2) {
-			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]].toString().toUpperCase())
+			menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 3) {
-			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]].toString().toUpperCase())
+			menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 4) {
-			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]].toString().toUpperCase())
+			menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][0].length == 5) {
-			var menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]][menu_defs[id].variable[i][0][4]].toString().toUpperCase())
+			menuvar_temp = (window[menu_defs[id].variable[i][0][0]][menu_defs[id].variable[i][0][1]][menu_defs[id].variable[i][0][2]][menu_defs[id].variable[i][0][3]][menu_defs[id].variable[i][0][4]].toString().toUpperCase())
 		}
 		if (menu_defs[id].variable[i][3]) menuvar_temp = menu_defs[id].variable[i][4][menuvar_temp]
-		drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], menuvar_temp)
+		drawText(xpos+menu_defs[id].variable[i][1], ypos+menu_defs[id].variable[i][2], (menuvar_temp+" ").toUpperCase())
 	}
 	
 	if (cursor) canvas.drawImage(img_text, 120, 8, 8, 8, xpos+menu_defs[id].options[menuOption][0], ypos+menu_defs[id].options[menuOption][1], 8, 8)
@@ -214,5 +233,20 @@ function settings_toggle(params) {
 	level.settings[params[0]] = (!level.settings[params[0]])
 }
 function online_toggle(params) {
-	online[params[0]] = 1-online[params[0]]
+	if (online.loaded) {
+		online[params[0]] = 1-online[params[0]]
+		getServer("sort="+online.sort+"&page="+online.page)
+	}
+}
+function online_add(params) {
+	if (online.loaded && online[params[0]] < params[1] || !params[1]) {
+		online[params[0]] += 1
+		getServer("sort="+online.sort+"&page="+online.page)
+	}
+}
+function online_sub(params) {
+	if (online.loaded && online[params[0]] > params[1]) {
+		online[params[0]] -= 1
+		getServer("sort="+online.sort+"&page="+online.page)
+	}
 }

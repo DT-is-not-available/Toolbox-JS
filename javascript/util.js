@@ -1,9 +1,55 @@
 Math.mod = function(val,maxval){
 	return val-(Math.trunc(val/maxval)*maxval)
 }
-
-function getServerTest(Data={id:1}) {
-    const Url='http://localhost:8001/getlevel.php'
+serverUrl = "https://toolboxwebserver.thedt365.repl.co/"
+function getServer(Data="sort=recent") {
+	online.loaded = false
+	online.level_1 = {loaded: false, title: "LOADING...",author: "",description1: "",description2: "",description3: ""}
+	online.level_2 = {loaded: false, title: "LOADING...",author: "",description1: "",description2: "",description3: ""}
+	online.level_3 = {loaded: false, title: "LOADING...",author: "",description1: "",description2: "",description3: ""}
+    const Url=serverUrl+'levels.php?'+Data
+    const othePram={
+        headers:{
+            "content-type":"application/json; charset=UTF-8"
+        },
+        body:Data,
+        method:"POST"
+    };
+    fetch(Url,othePram)
+    .then(data=>{return data.json()})
+    .then(res=>{
+        console.log(res)
+		if (JSON.stringify(res).substring(0,1) == '{') {
+			
+		} else {
+			online.level_1 = {loaded: false, title: "INVALID",author: "",description1: "",description2: "",description3: ""}
+			online.level_2 = {loaded: false, title: "INVALID",author: "",description1: "",description2: "",description3: ""}
+			online.level_3 = {loaded: false, title: "INVALID",author: "",description1: "",description2: "",description3: ""}
+			online.loaded = true
+			online.level_1.loaded = true
+			online.level_2.loaded = true
+			online.level_3.loaded = true
+			online.level_1.title = res[0].title
+			online.level_2.title = res[1].title
+			online.level_3.title = res[2].title
+			online.level_1.author = "BY: "+res[0].author
+			online.level_2.author = "BY: "+res[1].author
+			online.level_3.author = "BY: "+res[2].author
+			online.level_1.description1 = res[0].description.substring(0,26)
+			online.level_2.description1 = res[1].description.substring(0,26)
+			online.level_3.description1 = res[2].description.substring(0,26)
+			online.level_1.description2 = res[0].description.substring(26,52)
+			online.level_2.description2 = res[1].description.substring(26,52)
+			online.level_3.description2 = res[2].description.substring(26,52)
+			online.level_1.description3 = res[0].description.substring(52,78)
+			online.level_2.description3 = res[1].description.substring(52,78)
+			online.level_3.description3 = res[2].description.substring(52,78)
+		}
+    })
+    .catch(error=>console.log(error))
+}
+function setServer(Data="") {
+    const Url=serverUrl+'addlevel.php?'+Data
     const othePram={
         headers:{
             "content-type":"application/json; charset=UTF-8"
@@ -18,7 +64,6 @@ function getServerTest(Data={id:1}) {
     })
     .catch(error=>console.log(error))
 }
-getServerTest()
 
 Audio.prototype.stop = function(){
 	this.pause()
