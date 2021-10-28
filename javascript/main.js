@@ -799,6 +799,7 @@ function packLoadLevel(params) {
 
 function exportLevel(params) {
 	quitMenu()
+	levelpack[currentlevel[0]][currentlevel[1]] = btoa(JSON.stringify(level))
 	window.open(window.location.href+'/#'+btoa(JSON.stringify(levelpack)))
 	addMenu(64, 92, "dialouge_export", false)
 }

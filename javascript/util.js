@@ -32,6 +32,9 @@ function getServer(Data="sort=recent") {
 			online.level_1.title = res[0].title
 			online.level_2.title = res[1].title
 			online.level_3.title = res[2].title
+			online.level_1.level = res[0].level
+			online.level_2.level = res[1].level
+			online.level_3.level = res[2].level
 			online.level_1.author = "BY: "+res[0].author
 			online.level_2.author = "BY: "+res[1].author
 			online.level_3.author = "BY: "+res[2].author

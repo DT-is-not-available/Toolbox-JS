@@ -250,3 +250,11 @@ function online_sub(params) {
 		getServer("sort="+online.sort+"&page="+online.page)
 	}
 }
+function online_level(params) {
+	if (online.loaded && online["level_"+(params[0]+1)].level) {
+		quitMenu()
+		gameLayer = "menu"
+		loadPack(atob(online["level_"+(params[0]+1)].level))
+		camera_x = 0
+	}
+}
