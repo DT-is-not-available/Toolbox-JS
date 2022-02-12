@@ -1,0 +1,245 @@
+{
+	"inherit": {
+		"animation": [
+			{
+				"frameX": 0,
+				"frameY": 0
+			}
+		],
+		"speed": 0.5,
+		"kills": true,
+		"canStomp": true,
+		"gravity": 0.5,
+		"animationWidth": 16,
+		"animationHeight": 16,
+		"animationFPS": 6,
+		"deathAnimation": true,
+		"deathFrame": {
+			"frameX": 32,
+			"frameY": 0
+		},
+		"properties": {
+			"ENABLED": true,
+			"ACTIVE": true,
+			"PLAYER COLLISION": true,
+			"BACKGROUND": false,
+			"FORCE LOAD": false,
+			"FACE RIGHT": false
+		},
+		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 10, "Y_pos": 0},
+		"tilecollision": true,
+		"enemycollision": true,
+		"solid": false,
+		"mirrors": true,
+		"turnonedge": false,
+		"blockimmune": false,
+		"destroyOnMario": false,
+		"jumpsoutofblock": false,
+		"growsMario": false
+	},
+	"goomba": {
+		"animation": [
+			{
+				"frameX": 0,
+				"frameY": 0
+			},
+			{
+				"frameX": 16,
+				"frameY": 0
+			}
+		],
+		"mirrors": false,
+		"jumpsoutofblock": true
+	},
+	"large_goomba": {
+		"animationWidth": 32,
+		"animationHeight": 32,
+		"deathFrame": {
+			"frameX": 64,
+			"frameY": 56
+		},
+		"hitbox": {"X_neg": 13, "X_pos": 13, "Y_neg": 26, "Y_pos": 0},
+		"animation": [
+			{
+				"frameX": 0,
+				"frameY": 56
+			},
+			{
+				"frameX": 32,
+				"frameY": 56
+			}
+		],
+		"mirrors": false,
+		"jumpsoutofblock": true
+	},
+	"banzai_bill": {
+		"animationWidth": 32,
+		"animationHeight": 32,
+		"animation": [
+			{
+				"frameX": 96,
+				"frameY": 56
+			}
+		],
+		"hitbox": {"X_neg": 13, "X_pos": 13, "Y_neg": 26, "Y_pos": 0},
+		"speed": 2,
+		"gravity": 0,
+		"deathAnimation": false,
+		"tilecollision": false,
+		"enemycollision": false
+	},
+	"big_banzai_bill": {
+		"animationWidth": 64,
+		"animationHeight": 64,
+		"animation": [
+			{
+				"frameX": 128,
+				"frameY": 56
+			}
+		],
+		"hitbox": {"X_neg": 29, "X_pos": 29, "Y_neg": 52, "Y_pos": 0},
+		"speed": 2,
+		"gravity": 0,
+		"deathAnimation": false,
+		"tilecollision": false,
+		"enemycollision": false
+	},
+	"goombrat": {
+		"animation": [
+			{
+				"frameX": 96,
+				"frameY": 0
+			},
+			{
+				"frameX": 112,
+				"frameY": 0
+			}
+		],
+		"mirrors": false,
+		"deathFrame": {
+			"frameX": 128,
+			"frameY": 0
+		},
+		"jumpsoutofblock": true
+	},
+	"spiny": {
+		"canStomp": false,
+		"animation": [
+			{
+				"frameX": 144,
+				"frameY": 0
+			},
+			{
+				"frameX": 160,
+				"frameY": 0
+			}
+		],
+		"deathAnimation": false,
+		"jumpsoutofblock": true
+	},
+	"poison_mushroom": {
+		"canStomp": false,
+		"destroyOnMario": true,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 224,
+				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false,
+		"blockimmune": true
+	},
+	"mushroom": {
+		"kills": false,
+		"destroyOnMario": true,
+		"canStomp": false,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 224,
+				"frameY": 0
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false,
+		"growsMario": true,
+		"pointvalue": 4,
+		"blockimmune": true
+	},
+	"1up": {
+		"kills": false,
+		"destroyOnMario": true,
+		"canStomp": false,
+		"speed": 1,
+		"animation": [
+			{
+				"frameX": 128,
+				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"enemycollision": false,
+		"growsMario": false,
+		"pointvalue": 8,
+		"blockimmune": true
+	},
+	"bullet_bill": {
+		"animation": [
+			{
+				"frameX": 48,
+				"frameY": 0
+			}
+		],
+		"speed": 2,
+		"gravity": 0,
+		"deathAnimation": false,
+		"tilecollision": false,
+		"enemycollision": false
+	},
+	"muncher": {
+		"speed": 0,
+		"canStomp": false,
+		"solid": true,
+		"hitbox": {"X_neg": 8, "X_pos": 8, "Y_neg": 16, "Y_pos": 0},
+		"animation": [
+			{
+				"frameX": 144,
+				"frameY": 40
+			},
+			{
+				"frameX": 160,
+				"frameY": 40
+			}
+		],
+		"deathAnimation": false,
+		"mirrors": false,
+		"jumpsoutofblock": true,
+		"blockimmune": true
+	},
+	"plant": {
+		"speed": 0,
+		"canStomp": false,
+		"solid": false,
+		"hitbox": {"X_neg": 5, "X_pos": 5, "Y_neg": 15, "Y_pos": 0},
+		"animation": [
+			{
+				"frameX": 96,
+				"frameY": 16
+			},
+			{
+				"frameX": 112,
+				"frameY": 16
+			}
+		],
+		"animationWidth": 16,
+		"animationHeight": 24,
+		"deathAnimation": false,
+		"mirrors": false,
+		"jumpsoutofblock": true
+	}
+}
