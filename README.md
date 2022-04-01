@@ -1,4 +1,4 @@
 # Toolbox-JS
-The official github repository for the new Javascript rewrite of Super Mario Toolbox
+The official github repository for the new Javascript rewrite of Soup Mayo Box
 
-Super Mario Toolbox is a fanmade open source Mario level editor
+Soup Mayo Box is totally 1000% an original game
