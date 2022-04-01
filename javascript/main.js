@@ -144,8 +144,8 @@ class GameLayer_Class {
 		//HUD
 		
 		if (!debug_mode) {
-			drawText(0, 8, "   MARIO          WORLD  TIME")
-			drawText(0, 16, "   "+Mario.score.toString().padStart(6,'0').padEnd(8,' ')+" x"+Mario.coins.toString().padStart(2,'0')+"    1-1  "+Math.trunc(Math.abs(world_timer)).toString().padStart(3,'0').padStart(5,' '))
+			drawText(0, 8, "   MAYO POTASSIUM  LIFE        H")
+			drawText(0, 16, "   "+Mario.score.toString().padStart(6,'0').padEnd(8,' ')+" x"+Mario.coins.toString().padStart(2,'0')+"    NONE "+Math.trunc(Math.abs(world_timer)).toString().padStart(3,'0').padStart(5,' '))
 			canvas.drawImage(img_text, [136, 136, 136, 136+8, 136+16, 136+8][mod(Math.round(tileanim_timer), 6)], 8, 8, 8, 88, 16, 8, 8)
 		}
 		
@@ -174,7 +174,7 @@ class GameLayer_Class {
 		drawTileSet(level.tiles);
 		//canvas.drawImage(image, image x, image y, image width, image height, x pos, y pos, width, height)
 		canvas.drawImage(img_title, 1, 91, 184, 88, 36, 28+Math.round(window.title_y), 184, 88);
-		drawText(36, 28+89+Math.round(window.title_y), "JAVASCRIPT EDITION");
+		drawText(36, 28+89+Math.round(window.title_y), "BIGNOISE EDITION");
 		
 	}
 	edit() {

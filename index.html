@@ -1,1 +1,167 @@
-This page is unavailable. Please come back later.
+<!DOCTYPE html>
+<html>
+  <script async src="//static.getclicky.com/101307727.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Press Start 2P' rel='stylesheet'>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport" content="width=device-width">
+	<meta http-equiv='cache-control' content='no-cache'>
+	<meta http-equiv='expires' content='0'>
+	<meta http-equiv='pragma' content='no-cache'>
+    <title>Mayo Box JS</title>
+  </head>
+  <body>
+	<canvas id="canvas" width="256" height="240" onblur="resetkeys()">
+	<p>Sorry, but this browser is unable to display the game window due to it being outdated. Please try using a new browser like Chrome, Firefox, or Opera GX. Do not use internet explorer because it will most likely not work.</p>
+	</canvas>
+	<script>
+/*
+window.addEventListener("error",function(err) {
+	var errorMessage = "" + err.message + " - " + err.filename + " - line " + err.lineno + " - col " + err.colno;
+	console.error("Oh no, an error occured:\n" + errorMessage);
+});
+*/
+	</script>
+    <script src="javascript/util.js"></script>
+    <script src="javascript/tilemap_draw.js"></script>
+    <script src="javascript/main.js"></script>
+    <script src="javascript/classes/mario.js"></script>
+    <script src="javascript/classes/enemy.js"></script>
+    <script src="javascript/classes/generic_entity.js"></script>
+    <script src="javascript/classes/text.js"></script>
+    <script src="javascript/classes/blockhit.js"></script>
+    <script src="javascript/classes/particle.js"></script>
+    <script src="setup.js"></script>
+	<button type="button" class="collapsible" onclick="this.blur();">SETTINGS</button>
+	<div class="settings">
+	  <p>GAME SCALE</p>
+	  <button onclick="setScale(1)">1</button>
+	  <button onclick="setScale(2)">2</button>
+	  <button onclick="setScale(3)">3</button>
+	  <button onclick="setScale(4)">4</button>
+	  <p></p>
+	  <button onclick="setScaleAuto()">Auto</button>
+	  <button onclick="setScaleFit()">Fit</button>
+	  <p id="dispfps">FPS: </p>
+	  <div class="rangeslider">
+		<input type="range" min="30" max="240" value="60" step="15" class="fpsslider" id="fpsslider"></input>
+	  </div>
+	  <script>
+var fpsslider = document.getElementById("fpsslider");
+var fpsoutput = document.getElementById("dispfps");
+fpsoutput.innerHTML = "FPS: "+60;
+
+fpsslider.oninput = function() {
+	if (this.value == 255) {
+		fpsoutput.innerHTML = "FPS: UNLIMITED";
+		fps = 1000;
+	}else{
+		fpsoutput.innerHTML = "FPS: "+this.value;
+		fps = this.value;
+	}
+}
+	  </script>
+	</div>
+	<p></p>
+	<button type="button" class="collapsible2" onclick="this.blur();">DEBUG</button>
+	<div class="settings">
+	  <p class="debug">NULL</p>
+	  <p class="debug">NULL</p>
+	  <p class="debug">NULL</p>
+	  <p class="debug">NULL</p>
+	  <p class="debug">NULL</p>
+	  <p class="debug">NULL</p>
+	  <p class="debug">NULL</p><br>
+	  <p id="dispspeed">SPEED: </p>
+	  <div class="rangeslider">
+		<input type="range" min="10" max="200" value="100" step="10" class="speedslider" id="speedslider"></input>
+	  </div><p>
+	  <script>
+var speedslider = document.getElementById("speedslider");
+var speedoutput = document.getElementById("dispspeed");
+speedoutput.innerHTML = "SPEED: 100%";
+
+speedslider.oninput = function() {
+	speedoutput.innerHTML = "SPEED: "+this.value+"%";
+	timemod = this.value/100;
+}
+	  </script>
+	  <button onclick="Mario.powerup = 0; this.blur();">SMALL MARIO</button><br>
+	  <button onclick="Mario.powerup = 1; this.blur();">BIG MARIO</button><br>
+	  <button onclick="Mario.powerup = 2; this.blur();">FIRE MARIO</button><br>
+	  <button onclick="Mario.dead = true; this.blur();">KILL MARIO</button>
+	</div><p></p>
+	<button type="button" class="collapsible3" onclick="this.blur();">LAYERS</button>
+	<div class="settings">
+	  <p></p>
+	  <button onclick="g_layer.menu(); this.blur();">g_layer.menu</button><br>
+	  <button onclick="g_layer.game(); this.blur();">g_layer.game</button><br>
+	  <button onclick="g_layer.edit(); this.blur();">g_layer.edit</button><br>
+	  <button onclick="g_layer.game_test(); this.blur();">g_layer.game_test</button>
+	</div><br><p><br>
+	<button type="button" onclick="this.blur(); window.location.reload(true);">UPDATE</button>
+	<input class="levelButtons" style="display: none" type="file" id="level_upload" onclick="this.blur();" accept=".lvl2"></input><br>
+	<script>
+const levelUpload = document.getElementById('level_upload');
+levelUpload.addEventListener('change', (event) => {
+	const fileList = event.target.files;
+	console.log(fileList);
+	readLevel(fileList[0]);
+});
+	</script>
+	<script>
+var coll = document.getElementsByClassName("collapsible");
+var content = document.getElementsByClassName("collapsible").nextElementSibling;
+coll[0].addEventListener("click", function() {
+  this.classList.toggle("active");
+  var content = this.nextElementSibling;
+  if (content.style.display === "block") {
+    content.style.display = "none";
+  } else {
+    content.style.display = "block";
+  }
+});
+	</script>
+	<script>
+var coll = document.getElementsByClassName("collapsible2");
+var content = document.getElementsByClassName("collapsible2").nextElementSibling;
+coll[0].addEventListener("click", function() {
+  this.classList.toggle("active");
+  var content = this.nextElementSibling;
+  if (content.style.display === "block") {
+    content.style.display = "none";
+	debug_mode = false
+  } else {
+    content.style.display = "block";
+	debug_mode = true
+  }
+});
+	</script>
+	<script>
+var coll = document.getElementsByClassName("collapsible3");
+var content = document.getElementsByClassName("collapsible3").nextElementSibling;
+coll[0].addEventListener("click", function() {
+  this.classList.toggle("active");
+  var content = this.nextElementSibling;
+  if (content.style.display === "block") {
+    content.style.display = "none";
+  } else {
+    content.style.display = "block";
+  }
+});
+	</script>
+	<script>
+if(window.location.hash) {
+document.getElementsByClassName('collapsible2')[0].style.display = 'none'
+document.getElementsByClassName('collapsible3')[0].style.display = 'none'
+var all = document.getElementsByClassName('levelButtons');
+for (var i = 0; i < all.length; i++) {
+  all[i].style.display = 'none';
+}
+}
+	</script>
+  </body>
+</html>
